@@ -1,5 +1,6 @@
 #include "Auxiliaries.h"
 
+mtm::Dimensions::Dimensions( int row_t,  int col_t) : row(row_t), col(col_t) {}
 
 std::string mtm::Dimensions::toString() const {
     return "(" + std::to_string(row) + "," + std::to_string(col) + ")";
@@ -14,11 +15,11 @@ bool mtm::Dimensions::operator!=(const Dimensions& other) const {
 }
 
 int mtm::Dimensions::getRow() const {
-    return (int)row;
+    return row;
 }
 
 int mtm::Dimensions::getCol() const {
-    return (int)col;
+    return col;
 }
 
 std::string mtm::printMatrix(const int* matrix,const Dimensions& dim){
