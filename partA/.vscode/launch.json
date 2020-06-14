@@ -5,10 +5,10 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "mtrx Launch",
+            "name": "partA Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/mtrx",
+            "program": "${workspaceFolder}/partA",
             "args": [],
             "stopAtEntry": true,
             "cwd": "${workspaceFolder}",
