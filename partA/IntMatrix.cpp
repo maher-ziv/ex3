@@ -5,15 +5,26 @@ using std::endl;
 using mtm::IntMatrix;
 using mtm::Dimensions;
 
-IntMatrix::IntMatrix(Dimensions d, int init__val ):dimension(d) , init_val(init__val){
-    
+void IntMatrix::allocSpace(){
+
     matrix = new int* [dimension.getRow()];
     for(int i=0 ; i < dimension.getRow() ; i++){
         matrix[i] = new int[dimension.getCol()];
-            for( int j=0 ; j < dimension.getCol() ; j++){
-                matrix[i][j] = init_val;
-            }
     }
+}
+
+IntMatrix::IntMatrix(Dimensions d, int init__val ):dimension(d) , init_val(init__val){
+    
+    allocSpace();
+    for(int i=0 ; i < dimension.getRow() ; i++){
+        for( int j=0 ; j < dimension.getCol() ; j++){
+            matrix[i][j] = init_val;
+        }
+    }
+}
+IntMatrix::IntMatrix(int scalar_val):dimension(1,1),init_val(scalar_val){
+    allocSpace();
+    matrix[0][0]=init_val;
 }
 
 IntMatrix IntMatrix::Identity(int dimension){
@@ -43,8 +54,8 @@ int& IntMatrix::operator()(int row_val , int col_val){
     return matrix[row_val][col_val];
 }
 
-int& IntMatrix::operator()(int row_val , int col_val ) const{
-    int res = (*this)(row_val,col_val);
+int IntMatrix::operator()(int row_val , int col_val ) const{
+    int res = matrix[row_val][col_val];
     return res;
 }
 
@@ -112,20 +123,19 @@ bool mtm::any(const IntMatrix& a){
 }
 
 
-
-
-
 int main(){
 
     
     Dimensions dim(5 ,3);
     IntMatrix m1(dim);
     IntMatrix m2(dim , 5);
+    IntMatrix m3(5);
 
     cout << m2(1,0) << endl;
-
-    m2(1,0) = 99;
-    m2(2,1) = 8;
+    cout << m2(1,0) + m3(0,0) << endl;
+    m2(1,0) = -3;
+    cout << m2(1,0) << endl;
+    m2 += 8;
     cout << m2(1,0) << endl;
 
     IntMatrix m_t = m2.transpose();
