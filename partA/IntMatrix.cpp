@@ -5,7 +5,7 @@ using std::endl;
 using mtm::IntMatrix;
 using mtm::Dimensions;
 
-IntMatrix::IntMatrix(Dimensions d, int init_val ):dimension(d){
+IntMatrix::IntMatrix(Dimensions d, int init__val ):dimension(d) , init_val(init__val){
     
     matrix = new int* [dimension.getRow()];
     for(int i=0 ; i < dimension.getRow() ; i++){
@@ -43,6 +43,11 @@ int& IntMatrix::operator()(int row_val , int col_val){
     return matrix[row_val][col_val];
 }
 
+int& IntMatrix::operator()(int row_val , int col_val ) const{
+    int res = (*this)(row_val,col_val);
+    return res;
+}
+
 IntMatrix IntMatrix::operator-() const{
 
     IntMatrix tmp = *this; //TODO test it if this works !!
@@ -58,17 +63,32 @@ IntMatrix IntMatrix::operator-() const{
     return tmp ;
 }
 
-IntMatrix& IntMatrix::operator+=(const IntMatrix& a){
+IntMatrix& IntMatrix::operator+=(const IntMatrix& b){
 
-    for(IntMatrix::iterator it_a = a.begin() , it_b = *this.begin() ; it_a !=a.end() ; ++it_a , ++it_b ) { 
-        *it_b = *it_a;
+    if ( a.size() > b.size() ) { // matrix a and b not from the same dimension which mean casting happened and dime of b is one i.e. 1x1
+        for (IntMatrix::iterator it_a = this.begin() ; it_a != a.end() ; ++it_a) { 
+          *it_a += b(0,0);
+        }
+    }else{
+        for (IntMatrix::iterator it_a = this.begin() ,it_b = b.begin() ; it_a != a.end() ; ++it_a , ++it_b ) { 
+            *it_a += *it_b;
+        }
     }
     return *this;
 }
 
-IntMatrix operator+(const IntMatrix& a ,const IntMatrix& b);{
-    IntMatrix tmp = a;
-    return tmp += b;
+// IntMatrix& operator+=(const int& num){
+//     for(IntMatrix::iterator it_a = this.begin() ; it_a != a.end() ; ++it_a) { 
+//         *it_a += num;
+//     }
+//     return *this;
+// }
+
+IntMatrix operator+(const IntMatrix& a ,const IntMatrix& b){
+    //if casting happened and dime of a or b is one i.e. 1x1  , this mean that the user want to add scalar
+    IntMatrix tmp_1 = a.size() >= b.size() ? a : b; 
+    IntMatrix tmp_2 = tmp_1.size() == a.size() ? b : a;
+    return tmp_1 += tmp_2;
 }
 
 
