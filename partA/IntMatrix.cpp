@@ -1,9 +1,12 @@
 #include <iostream>
 #include "IntMatrix.h"
+
 using std::cout;
 using std::endl;
 using mtm::IntMatrix;
 using mtm::Dimensions;
+const Dimensions DIM1X1(1,1);
+
 
 void IntMatrix::allocSpace(){
 
@@ -22,7 +25,7 @@ IntMatrix::IntMatrix(Dimensions d, int init__val ):dimension(d) , init_val(init_
         }
     }
 }
-IntMatrix::IntMatrix(int scalar_val):dimension(1,1),init_val(scalar_val){
+IntMatrix::IntMatrix(int scalar_val):dimension(DIM1X1),init_val(scalar_val){
     allocSpace();
     matrix[0][0]=init_val;
 }
@@ -144,20 +147,32 @@ bool mtm::any(const IntMatrix& a){
 
 */
 
+void print(int** matrix, int r , int c)
+{   
+    printf("\n\n");
+    int i, j;
+    for (i = 0; i < r; ++i)
+    {
+        for (j = 0; j < c; ++j)
+            printf("%d ", matrix[i][j]);
+        printf("\n");
+    }
+    printf("\n\n");
+}
 
 int main(){
-
     
     Dimensions dim(5 ,3);
     IntMatrix m1(dim);
     IntMatrix m2(dim , 5);
-    IntMatrix m3(5);
+    IntMatrix m3;
+
 
     cout << m2(1,0) << endl;
     cout << m2(1,0) + m3(0,0) << endl;
     m2(1,0) = -3;
     cout << m2(1,0) << endl;
-    m2 += 8;
+   // m2 += 8;
     cout << m2(1,0) << endl;
 
     IntMatrix m_t = m2.transpose();
