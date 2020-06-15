@@ -10,23 +10,28 @@ namespace mtm {
         private:
             int** matrix;
             mtm::Dimensions dimension;
-            int init_val; //TODO check if necceary
-            //void allocSpace();
+
         public:
-            IntMatrix(mtm::Dimensions dimension = { 1 , 1}, int init_val = 0); // TODO check if that ok {1 ,1}
-            IntMatrix(int scalar_val);
+            IntMatrix() = delete;
+            IntMatrix(mtm::Dimensions dimension , int initial_val = 0); 
+            IntMatrix(int scalar_val); //TODO check if this ok or need to move it private 
+            IntMatrix(const IntMatrix& m);
             IntMatrix Identity(int dimension);
             IntMatrix transpose() const ;
             IntMatrix operator-() const;
             IntMatrix& operator+=(const IntMatrix& a);
-            //IntMatrix& operator+=(const int& num);
+            //IntMatrix& operator+=(const int& num);//TODO
             int& operator()(int row_val , int col_val ); 
             int operator()(int row_val , int col_val ) const ;
+            int size() const;
+            int height() const ;
+            int width() const ; 
             
             class iterator ;
             class const_iterator ;
-            int size() const;
-            void print(int** matrix, int r , int c);
+
+
+            static void printM(const IntMatrix& m) ; // TODO test func
 
     };
 
