@@ -11,8 +11,7 @@ namespace mtm {
             int** matrix;
             mtm::Dimensions dimension;
             int init_val; //TODO check if necceary
-            void allocSpace();
-            //const int** allocSpace(int** matrix , mtm::Dimensions dimension);
+            //void allocSpace();
         public:
             IntMatrix(mtm::Dimensions dimension = { 1 , 1}, int init_val = 0); // TODO check if that ok {1 ,1}
             IntMatrix(int scalar_val);
@@ -27,6 +26,7 @@ namespace mtm {
             class iterator ;
             class const_iterator ;
             int size() const;
+            void print(int** matrix, int r , int c);
 
     };
 
