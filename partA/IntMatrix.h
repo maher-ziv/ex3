@@ -10,11 +10,11 @@ namespace mtm {
         private:
             int** matrix;
             mtm::Dimensions dimension;
-            int init_val; //TODO check if necceary
-            //void allocSpace();
-        public:
-            IntMatrix(mtm::Dimensions dimension = { 1 , 1}, int init_val = 0); // TODO check if that ok {1 ,1}
             IntMatrix(int scalar_val);
+        public:
+            IntMatrix() = delete;
+            IntMatrix(mtm::Dimensions dimension , int initial_val = 0); 
+            IntMatrix(const IntMatrix& m);
             IntMatrix Identity(int dimension);
             IntMatrix transpose() const ;
             IntMatrix operator-() const;
@@ -22,10 +22,13 @@ namespace mtm {
             //IntMatrix& operator+=(const int& num);
             int& operator()(int row_val , int col_val ); 
             int operator()(int row_val , int col_val ) const ;
+            int size() const;
+            int height() const ;
+            int width() const ; 
             
             class iterator ;
             class const_iterator ;
-            int size() const;
+
 
             
             void print(int** matrix, int r , int c);
