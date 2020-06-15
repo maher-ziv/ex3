@@ -26,6 +26,8 @@ namespace mtm {
             class iterator ;
             class const_iterator ;
             int size() const;
+
+            
             void print(int** matrix, int r , int c);
 
     };
