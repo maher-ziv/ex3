@@ -33,7 +33,7 @@ mtm::IntMatrix::IntMatrix(mtm::Dimensions d, int init__val ):dimension(d) , init
     }
 }
 
-mtm::IntMatrix::IntMatrix(int scalar_val):dimension(1,1),init_val(scalar_val){
+mtm::IntMatrix::IntMatrix(int scalar_val):dimension(DIM1X1),init_val(scalar_val){
     allocSpace();
     matrix[0][0]=init_val;
 }
@@ -70,6 +70,7 @@ int mtm::IntMatrix::operator()(int row_val , int col_val ) const{
     return res;
 }
 
+/*
 mtm::IntMatrix mtm::IntMatrix::operator-() const{
 
     mtm::IntMatrix tmp = *this; //TODO test it if this works !!
@@ -88,36 +89,17 @@ mtm::IntMatrix mtm::IntMatrix::operator-() const{
 
 mtm::IntMatrix& mtm::IntMatrix::operator+=(const mtm::IntMatrix& b){
 
-    if ( dimension.getRow() > b.dimension.getRow() ) { // matrix a and b not from the same dimension which mean casting happened and dime of b is one i.e. 1x1
-        for(int i=0 ; i <  dimension.getRow() ; i++){
-            for(int j=0 ; j < dimension.getCol() ; j++){
-                (*this)(i,j) += b(0,0);
-            }
+    if ( a.size() > b.size() ) { // matrix a and b not from the same dimension which mean casting happened and dime of b is one i.e. 1x1
+        for (mtm::IntMatrix::iterator it_a = (*this).begin() ; it_a != a.end() ; ++it_a) { 
+          *it_a += b(0,0);
         }
     }else{
-        for(int i=0 ; i <  dimension.getRow() ; i++){
-            for(int j=0 ; j < dimension.getCol() ; j++){
-                (*this)(i,j) += b(i,j);
-            }
+        for (mtm::IntMatrix::iterator it_a = this->begin() ,it_b = b.begin() ; it_a != a.end() ; ++it_a , ++it_b ) { 
+            *it_a += *it_b;
         }
     }
     return *this;
 }
-
-
-// mtm::IntMatrix& mtm::IntMatrix::operator+=(const mtm::IntMatrix& b){
-
-//     if ( a.size() > b.size() ) { // matrix a and b not from the same dimension which mean casting happened and dime of b is one i.e. 1x1
-//         for (mtm::IntMatrix::iterator it_a = (*this).begin() ; it_a != a.end() ; ++it_a) { 
-//           *it_a += b(0,0);
-//         }
-//     }else{
-//         for (mtm::IntMatrix::iterator it_a = this->begin() ,it_b = b.begin() ; it_a != a.end() ; ++it_a , ++it_b ) { 
-//             *it_a += *it_b;
-//         }
-//     }
-//     return *this;
-// }
 
 // IntMatrix& operator+=(const int& num){
 //     for(IntMatrix::iterator it_a = this.begin() ; it_a != a.end() ; ++it_a) { 
@@ -132,7 +114,6 @@ mtm::IntMatrix operator+(const mtm::IntMatrix& a ,const mtm::IntMatrix& b){
     mtm::IntMatrix tmp_2 = tmp_1.size() == a.size() ? b : a;
     return tmp_1 += tmp_2;
 }
-
 
 bool mtm::all(const mtm::IntMatrix& a){
 
@@ -153,6 +134,46 @@ bool mtm::any(const mtm::IntMatrix& a){
     return false;
 }
 
+*/
+
+
+
+
+
+
+
+
+
+
+//===========================================================================================================
+//                              ----test----
+//===========================================================================================================
+mtm::IntMatrix& mtm::IntMatrix::operator+=(const mtm::IntMatrix& b){
+
+    if ( dimension.getRow() > b.dimension.getRow() ) { // matrix a and b not from the same dimension which mean casting happened and dime of b is one i.e. 1x1
+        for(int i=0 ; i <  dimension.getRow() ; i++){
+            for(int j=0 ; j < dimension.getCol() ; j++){
+                (*this)(i,j) += b(0,0);
+            }
+        }
+    }else{
+        for(int i=0 ; i <  dimension.getRow() ; i++){
+            for(int j=0 ; j < dimension.getCol() ; j++){
+                (*this)(i,j) += b(i,j);
+            }
+        }
+    }
+    return *this;
+}
+
+mtm::IntMatrix operator+(const mtm::IntMatrix& a ,const mtm::IntMatrix& b){
+    //if casting happened and dime of a or b is one i.e. 1x1  , this mean that the user want to add scalar
+    mtm::IntMatrix tmp_1 = a.size() >= b.size() ? a : b; 
+    mtm::IntMatrix tmp_2 = tmp_1.size() == a.size() ? b : a;
+    return tmp_1 += tmp_2;
+}
+
+
 
 void print(int** matrix, int r , int c)
 {   
@@ -169,6 +190,9 @@ void print(int** matrix, int r , int c)
 
 int main(){
     
+    using mtm::IntMatrix;
+    using mtm::Dimensions;
+
     Dimensions dim(5 ,3);
     IntMatrix m1(dim);
     IntMatrix m2(dim , 5);
@@ -179,7 +203,7 @@ int main(){
     cout << m2(1,0) + m3(0,0) << endl;
     m2(1,0) = -3;
     cout << m2(1,0) << endl;
-   // m2 += 8;
+    m2 += 8;
     cout << m2(1,0) << endl;
 
     IntMatrix m_t = m2.transpose();
