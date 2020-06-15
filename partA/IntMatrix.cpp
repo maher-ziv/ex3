@@ -19,7 +19,9 @@ mtm::IntMatrix::IntMatrix(Dimensions dim, int initial_val ) :
 
 mtm::IntMatrix::IntMatrix(const IntMatrix& m) {
 
-    Dimensions dim (std::max(m.height()) , height()), std::max(m.width() , width()))
+    Dimensions dim (std::max(m.height() , height()), std::max(m.width() , width()));
+
+
     
 
 
