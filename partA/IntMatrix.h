@@ -7,13 +7,15 @@
 namespace mtm {
 
     class IntMatrix{
+        
         private:
             int** matrix;
             mtm::Dimensions dimension;
             int init_val; //TODO check if necceary
             void allocSpace();
+            //const int** allocSpace();
         public:
-            IntMatrix(mtm::Dimensions dimension = { 1 , 1}, int init_val = 0); // TODO check if that ok {1 ,1}
+            IntMatrix(mtm::Dimensions dimension = {1,1}, int init_val = 0); // TODO check if that ok {1 ,1}
             IntMatrix(int scalar_val);
             IntMatrix Identity(int dimension);
             IntMatrix transpose() const ;
