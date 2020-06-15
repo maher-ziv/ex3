@@ -12,6 +12,7 @@ namespace mtm {
             mtm::Dimensions dimension;
             int init_val; //TODO check if necceary
             void allocSpace();
+            //const int** allocSpace(int** matrix , mtm::Dimensions dimension);
         public:
             IntMatrix(mtm::Dimensions dimension = { 1 , 1}, int init_val = 0); // TODO check if that ok {1 ,1}
             IntMatrix(int scalar_val);
@@ -20,8 +21,9 @@ namespace mtm {
             IntMatrix operator-() const;
             IntMatrix& operator+=(const IntMatrix& a);
             //IntMatrix& operator+=(const int& num);
-            int& operator()(int row_val , int col_val ); // TODO make cost operator()
+            int& operator()(int row_val , int col_val ); 
             int operator()(int row_val , int col_val ) const ;
+            
             class iterator ;
             class const_iterator ;
             int size() const;
