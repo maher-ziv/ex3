@@ -5,12 +5,12 @@ using std::cout;
 using std::endl;
 using mtm::Dimensions;
 
-mtm::IntMatrix::IntMatrix(Dimensions dim, int initial_val ) :
-    dimension(dim) {
-        matrix = new int* [dimension.getRow()];
-        for( int i=0 ; i < dimension.getRow() ; i++ ) {
-            matrix[i] = new int[dimension.getCol()];
-            for ( int j = 0 ; j < dimension.getCol() ; j++ ) {
+mtm::IntMatrix::IntMatrix(Dimensions dim, int initial_val ) : dimension(dim) {
+
+        matrix = new int* [ height() ]; 
+        for( int i = 0 ; i < height() ; i++ ) {
+            matrix[i] = new int [ width() ];
+            for ( int j = 0 ; j < width() ; j++ ) {
                 matrix[i][j] = initial_val;
             }
         }
@@ -33,18 +33,18 @@ mtm::IntMatrix::IntMatrix(const IntMatrix& m) {
 
 
 
-mtm::IntMatrix::IntMatrix(int scalar_val): dimension(1,1) {
+mtm::IntMatrix::IntMatrix( int scalar_val ): dimension(1,1) {
 
-    matrix = new int* [dimension.getRow()];
-    matrix[0] = new int[dimension.getCol()];
+    matrix = new int* [ height() ];
+    matrix[0] = new int[ width()] ;
     matrix[0][0] = scalar_val;
 
 }
 
 mtm::IntMatrix mtm::IntMatrix::Identity(int dimension) {
 
-    Dimensions dim(dimension,dimension);
-    mtm::IntMatrix identity(dim);
+    Dimensions dim ( dimension , dimension );
+    mtm::IntMatrix identity ( dim );
     for ( int i = 0 ; i < dimension ; i++ ) {
         identity(i,i) = 1; //TODO check if it's OK to write  1 
     }
@@ -61,27 +61,26 @@ int mtm::IntMatrix::width() const {
 }
 
 int mtm::IntMatrix::size() const {
-    return ( this->height() * this->width() );
+    return ( height() * width() );
 }
 
 mtm::IntMatrix mtm::IntMatrix::transpose() const {
 
-    int t_row = dimension.getCol()  , t_col = dimension.getRow() ;
-    Dimensions t_dimension(t_row,t_col);
-    mtm::IntMatrix t_matrix(t_dimension);
-    for ( int i = 0 ; i < t_row ; i++) {
-        for ( int j = 0 ; j < t_col ; j++ ) {
+    Dimensions t_dimension( width() , height() );
+    mtm::IntMatrix t_matrix( t_dimension );
+    for ( int i = 0 ; i < width() ; i++) {
+        for ( int j = 0 ; j < height() ; j++ ) {
             t_matrix(i,j) = matrix[j][i];
         }
     }
     return t_matrix;
 }
 
-int& mtm::IntMatrix::operator()(int row_val , int col_val) {
+int& mtm::IntMatrix::operator()( int row_val , int col_val ) {
     return matrix[row_val][col_val];
 }
 
-int mtm::IntMatrix::operator()(int row_val , int col_val ) const {
+int mtm::IntMatrix::operator()( int row_val , int col_val ) const {
     int res = matrix[row_val][col_val];
     return res;
 }
@@ -90,12 +89,6 @@ int mtm::IntMatrix::operator()(int row_val , int col_val ) const {
 mtm::IntMatrix mtm::IntMatrix::operator-() const {
 
     mtm::IntMatrix tmp = *this; //TODO test it if this works !!
-    // for(int i=0 ; i < dimension.getRow()  ; i++){
-    //   for(int j=0 ; j < dimension.getCol()  ; j++){
-    //     tmp(i,j)*=-1;
-    //   }
-    // }
-    
     for ( mtm::IntMatrix::iterator it = tmp.begin() ;it !=tmp.end() ;++it ) { //TODO pick one
         (*it) *= -1;
     }
@@ -166,15 +159,15 @@ bool mtm::any(const mtm::IntMatrix& a){
 //===========================================================================================================
 mtm::IntMatrix& mtm::IntMatrix::operator+=(const mtm::IntMatrix& b){
 
-    if ( dimension.getRow() > b.dimension.getRow() ) { // matrix a and b not from the same dimension which mean casting happened and dime of b is one i.e. 1x1
-        for(int i=0 ; i <  dimension.getRow() ; i++){
-            for(int j=0 ; j < dimension.getCol() ; j++){
+    if ( height() > b.height() ) { // matrix a and b not from the same dimension which mean casting happened and dime of b is one i.e. 1x1
+        for(int i=0 ; i <  height() ; i++){
+            for(int j=0 ; j < width() ; j++){
                 (*this)(i,j) += b(0,0);
             }
         }
     }else{
-        for(int i=0 ; i <  dimension.getRow() ; i++){
-            for(int j=0 ; j < dimension.getCol() ; j++){
+        for(int i=0 ; i <  height() ; i++){
+            for(int j=0 ; j < width() ; j++){
                 (*this)(i,j) += b(i,j);
             }
         }
@@ -191,13 +184,12 @@ mtm::IntMatrix& mtm::IntMatrix::operator+=(const mtm::IntMatrix& b){
 
 
 
-void  mtm::IntMatrix::print( const IntMatrix& m){   
+void  mtm::IntMatrix::printM( const IntMatrix& m) {   
     printf("\n\n");
-    int i, j;
-    for (i = 0; i < dimension.getRow(); ++i)
-    {
-        for (j = 0; j < dimension.getCol(); ++j)
-            printf("%d ", matrix[i][j]);
+    for (int i = 0; i < m.height(); ++i){
+        for (int j = 0; j < m.width(); ++j){
+            printf("%d ", m.matrix[i][j]);
+        }
         printf("\n");
     }
     printf("\n\n");
@@ -205,24 +197,22 @@ void  mtm::IntMatrix::print( const IntMatrix& m){
 
 int main(){
     
-    using mtm::IntMatrix;
-    using mtm::Dimensions;
- 
-
-    Dimensions dim(5 ,3);
-    IntMatrix m1(dim);
-    IntMatrix m2(dim , 5);
-    IntMatrix m3;
-    //IntMatrix::print(m2);
+    
+    
+    mtm::Dimensions dim(5 ,3);
+    mtm::IntMatrix m1(dim);
+    mtm::IntMatrix m2(dim , 5);
+    mtm::IntMatrix::printM(m2);
 
     cout << m2(1,0) << endl;
-    cout << m2(1,0) + m3(0,0) << endl;
+    cout << m2(1,0) + 5 << endl;
     m2(1,0) = -3; 
     cout << m2(1,0) << endl;
     m2 += 8;
+    mtm::IntMatrix::printM(m2);
     cout << m2(1,0) << endl;
 
-    IntMatrix m_t = m2.transpose();
+    mtm::IntMatrix m_t = m2.transpose();
     cout << m_t(2,1) << endl;
     cout << m_t(1,2) << endl;
 }

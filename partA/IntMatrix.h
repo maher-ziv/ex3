@@ -10,16 +10,17 @@ namespace mtm {
         private:
             int** matrix;
             mtm::Dimensions dimension;
-            IntMatrix(int scalar_val);
+
         public:
             IntMatrix() = delete;
             IntMatrix(mtm::Dimensions dimension , int initial_val = 0); 
+            IntMatrix(int scalar_val); //TODO check if this ok or need to move it private 
             IntMatrix(const IntMatrix& m);
             IntMatrix Identity(int dimension);
             IntMatrix transpose() const ;
             IntMatrix operator-() const;
             IntMatrix& operator+=(const IntMatrix& a);
-            //IntMatrix& operator+=(const int& num);
+            //IntMatrix& operator+=(const int& num);//TODO
             int& operator()(int row_val , int col_val ); 
             int operator()(int row_val , int col_val ) const ;
             int size() const;
@@ -30,8 +31,7 @@ namespace mtm {
             class const_iterator ;
 
 
-            
-            void print(int** matrix, int r , int c);
+            static void printM(const IntMatrix& m) ; // TODO test func
 
     };
 
