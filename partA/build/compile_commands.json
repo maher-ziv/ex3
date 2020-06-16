@@ -1,0 +1,12 @@
+[
+{
+  "directory": "C:/Users/maher/Desktop/mtm/ex3/github/partA/build",
+  "command": "C:\\MinGW\\bin\\g++.exe    -g   -std=gnu++11 -o CMakeFiles\\partA.dir\\IntMatrix.cpp.obj -c C:\\Users\\maher\\Desktop\\mtm\\ex3\\github\\partA\\IntMatrix.cpp",
+  "file": "C:/Users/maher/Desktop/mtm/ex3/github/partA/IntMatrix.cpp"
+},
+{
+  "directory": "C:/Users/maher/Desktop/mtm/ex3/github/partA/build",
+  "command": "C:\\MinGW\\bin\\g++.exe    -g   -std=gnu++11 -o CMakeFiles\\partA.dir\\Auxiliaries.cpp.obj -c C:\\Users\\maher\\Desktop\\mtm\\ex3\\github\\partA\\Auxiliaries.cpp",
+  "file": "C:/Users/maher/Desktop/mtm/ex3/github/partA/Auxiliaries.cpp"
+}
+]
