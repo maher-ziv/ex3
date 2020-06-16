@@ -1,3 +1,0 @@
-C:/Users/maher/Desktop/mtm/ex3/github/partA/build/CMakeFiles/partA.dir
-C:/Users/maher/Desktop/mtm/ex3/github/partA/build/CMakeFiles/edit_cache.dir
-C:/Users/maher/Desktop/mtm/ex3/github/partA/build/CMakeFiles/rebuild_cache.dir
