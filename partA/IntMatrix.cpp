@@ -32,7 +32,7 @@ mtm::IntMatrix mtm::IntMatrix::Identity ( int dimension ) {
     Dimensions dim ( dimension, dimension );
     mtm::IntMatrix identity ( dim );
     for ( int i = 0; i < dimension; i++ ) {
-        identity ( i, i ) = 1;  // TODO check if it's OK to write  1
+        identity ( i, i ) = 1;  // TODO check if it's OK to write  1 
     }
     return identity;
 }
