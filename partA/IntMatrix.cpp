@@ -8,18 +8,18 @@ using std::endl;
 
 mtm::IntMatrix::IntMatrix ( Dimensions dim, int initial_val )
     : dimension ( dim ) {
-        matrix = new int*[height()];
-        for ( int i = 0; i < height(); i++ ) {
-            matrix[i] = new int[width()];
-            for ( int j = 0; j < width(); j++ ) {
-                matrix[i][j] = initial_val;
-            }
+    matrix = new int*[height()];
+    for ( int i = 0; i < height(); i++ ) {
+        matrix[i] = new int[width()];
+        for ( int j = 0; j < width(); j++ ) {
+            matrix[i][j] = initial_val;
         }
+    }
 }
 
-// mtm::IntMatrix::IntMatrix(const IntMatrix& m) {
-//     Dimensions dim(std::max(m.height(), height()), std::max(m.width(),
-//     width()));
+// mtm::IntMatrix::IntMatrix ( const IntMatrix& m ) {
+//     Dimensions dim ( std::max ( m.height(), height() ),
+//                      std::max ( m.width(), width() ) );
 // }
 
 mtm::IntMatrix::IntMatrix ( int scalar_val ) : dimension ( 1, 1 ) {
@@ -32,7 +32,7 @@ mtm::IntMatrix mtm::IntMatrix::Identity ( int dimension ) {
     Dimensions dim ( dimension, dimension );
     mtm::IntMatrix identity ( dim );
     for ( int i = 0; i < dimension; i++ ) {
-        identity ( i, i ) = 1;  // TODO check if it's OK to write  1 
+        identity ( i, i ) = 1;  // TODO check if it's OK to write  1
     }
     return identity;
 }
@@ -45,8 +45,8 @@ int mtm::IntMatrix::width() const {
     return dimension.getCol();
 }
 
-int mtm::IntMatrix::size() const { 
-    return ( height() * width() ); 
+int mtm::IntMatrix::size() const {
+    return ( height() * width() );
 }
 
 mtm::IntMatrix mtm::IntMatrix::transpose() const {

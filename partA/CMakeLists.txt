@@ -7,5 +7,5 @@ set(MTM_FLAGS_RELEASE "${MTM_FLAGS} -DNDEBUG")
 
 set(CMAKE_CXX_FLAG ${MTM_FLAGS})
 
-add_executable(partA IntMatrix.cpp ../Auxiliaries.cpp)
+add_executable(partA IntMatrix.cpp Auxiliaries.cpp)
 

@@ -3,22 +3,27 @@
 #include <iostream>
 #include "IntMatrix.h"
 
+#define NUMBER_OF_TESTS 5
+
 void test_print_matrix(std::string title,const mtm::IntMatrix& mat){
     std::cout << title<<":" << std::endl << mat;
 }
 
 bool test_1(){
-    mtm::Dimensions dim(2 ,3);
+    mtm::Dimensions dim(2,3);
     mtm::IntMatrix mat_1(dim);
     mtm::IntMatrix mat_2(dim,2);
     mtm::IntMatrix mat_3(mat_1);
     const mtm::IntMatrix mat_4 = mat_2;
+
     if (mat_1.size() != 6){
         return false;
     }
+
     if(mat_1.width()!=3){
         return false;
     }
+
     if(mat_4.height()!=2){
         return false;
     }
@@ -67,10 +72,10 @@ bool test_4(){
     mtm::Dimensions dim(2 ,3);
     const mtm::IntMatrix mat_1 = mtm::IntMatrix::Identity(6);
     mtm::IntMatrix mat_2(dim,1);
-    if(all(mat_1)){
+    if(mtm::all(mat_1)){
         return false;
     }
-    if(any(mat_2==0)){
+    if(mtm::any(mat_2==0)){
         return false;
     }
     int counter = 0;
@@ -112,9 +117,8 @@ void run_test(std::function<bool()> test, std::string test_name){
 }
 
 int main(){
-    int test_num =5;
-    std::function<bool()> tests[5]= {test_1,test_2,test_3,test_4,test_5};
-    for(int i=0;i<test_num;++i){
+    std::function<bool()> tests[NUMBER_OF_TESTS]= {test_1,test_2,test_3,test_4,test_5};
+    for(int i=0;i<NUMBER_OF_TESTS;++i){
         run_test(tests[i],"Test "+std::to_string(i+1));
     }
 }
