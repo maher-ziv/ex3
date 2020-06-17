@@ -12,9 +12,10 @@ namespace mtm {
         int** matrix;
         mtm::Dimensions dimension;
 
-       public:  
+       public:
         IntMatrix() = delete;
-        IntMatrix ( mtm::Dimensions dimension, int initial_val = 0 );// TODO check if this ok or need to// move// it private
+        IntMatrix ( mtm::Dimensions dimension, int initial_val = 0 );
+        // TODO check if this ok or need to// move// it private
         IntMatrix ( int scalar_val );
         IntMatrix ( const IntMatrix& m );
         IntMatrix Identity ( int dimension );
