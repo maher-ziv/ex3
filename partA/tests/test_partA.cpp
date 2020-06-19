@@ -4,7 +4,7 @@
 
 #include "../IntMatrix.h"
 
-#define NUMBER_OF_TESTS 5
+#define NUMBER_OF_TESTS 6
 
 void test_print_matrix (std::string title, const mtm::IntMatrix& mat) {
     std::cout << title << ":" << std::endl << mat;
@@ -108,6 +108,11 @@ bool test_5() {
     return true;
 }
 
+bool test_6() {
+    
+    return true;
+}
+
 void run_test (std::function< bool() > test, std::string test_name) {
     if (!test()) {
         std::cout << test_name << " FAILED." << std::endl;
@@ -117,7 +122,7 @@ void run_test (std::function< bool() > test, std::string test_name) {
 }
 
 int main() {
-    std::function< bool() > tests[NUMBER_OF_TESTS] = {test_1, test_2, test_3, test_4, test_5};
+    std::function< bool() > tests[NUMBER_OF_TESTS] = {test_1, test_2, test_3, test_4, test_5, test_6};
     for (int i = 0; i < NUMBER_OF_TESTS; ++i) {
         run_test (tests[i], "Test " + std::to_string (i + 1));
     }

@@ -5,3 +5,5 @@ build
 makefile
 Makefile
 partA_test
+out
+.vs
