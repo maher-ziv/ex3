@@ -1,3 +1,3 @@
 # Part-A
 
-![alt text](https://breakbrunch.com/wp-content/uploads/2019/11/python-error-message-vs-c-110519.jpg)
+![alt text](https://www.monkeyuser.com/assets/images/2020/162-user-story.png)
