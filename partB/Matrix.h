@@ -13,6 +13,7 @@ namespace mtm {
         private:
         T** matrix;
         Dimensions dimension;
+        void allocate_space();
 
         public:
         Matrix() = delete;
@@ -51,19 +52,14 @@ namespace mtm {
         const const_iterator begin() const;
         const const_iterator end() const;
 
-
-
-
-
-
-        //Exceptions 
+        // Exceptions
         class AccessIllegalElement {
             public:
             const std::string what() const {
                 return "Mtm matrix error: An attempt to access an illegal element";
             }
         };
-        class IllegalInitialization{
+        class IllegalInitialization {
             public:
             const std::string what() const {
                 return "Mtm matrix error: Illegal initialization values";
@@ -99,6 +95,33 @@ namespace mtm {
     template<typename T>
     bool any (const Matrix<T>& a);
 
-}  // namespace mtm
+    template<typename T>
+    void mtm::Matrix<T>::allocate_space() {
+        matrix = new T*[height()];
+        for (int i = 0; i < height(); i++) {  // TODO check the while !!!
+            try {
+                matrix[i] = new T[width()];
+            } catch (const std::bad_alloc& e) {
+                for (int j = 0; j < i; j++){
+                    delete[] matrix[j];
+                }
+                delete[] matrix;
+                throw e;
+
+            }
+        }
+    }
+
+    template<typename T>
+    Matrix<T>::Matrix (const Matrix<T>& m) : dimension (m.dimension) {
+        allocate_space();
+        Matrix<T>::const_iterator it2 = m.begin();
+        for(Matrix<T>::iterator it = begin() ; it!=end();++it ,++it2){
+            *it = *it2;
+        }
+
+    }  
+
+}// namespace mtm
 
 #endif  // EX3_MATRIX_H
