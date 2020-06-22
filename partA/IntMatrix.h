@@ -11,7 +11,6 @@ namespace mtm {
        private:
         int** matrix;
         mtm::Dimensions dimension;
-        class T_iterator;
 
        public:
         IntMatrix() = delete;
@@ -41,8 +40,8 @@ namespace mtm {
         IntMatrix transpose() const;
 
         class iterator;
-        iterator begin();  // TODO check if const needed
-        iterator end();
+        iterator begin() ;  // TODO check if const needed
+        iterator end() ;
         class const_iterator;
         const const_iterator begin() const;
         const const_iterator end() const;
@@ -56,35 +55,6 @@ namespace mtm {
     bool all (const IntMatrix& a);
     bool any (const IntMatrix& a);
 
-    class IntMatrix::T_iterator {
-       private:
-        const IntMatrix* matrix;  // the matrix this iterator points to
-        int row, col;
-        bool is_last;//TODO לבדור אם יש הבדל בין const ל בלי 
-        T_iterator (const IntMatrix* matrix, int row, int col, bool is_last = false); 
-        friend class IntMatrix;  // allow IntMatrix to call the c'tor
-       public:
-        T_iterator() = delete;
-        T_iterator& operator= (const T_iterator& it);
-        T_iterator& operator++();
-        T_iterator operator++ (int);
-        bool operator== (const T_iterator& it) const;
-        bool operator!= (const T_iterator& it) const;
-    };
-
-    class IntMatrix::iterator : public IntMatrix::T_iterator {
-       public:  // TODO check if needed to move to private  !!!! // TODO check if need to make destructor
-        iterator (const IntMatrix* matrix, int row, int col, bool is_last = false);
-        int& operator*() const;
-    };
-
-    class IntMatrix::const_iterator : public IntMatrix::T_iterator {
-       public:  // TODO check if needed to move to private  !!!! // TODO check if need to make destructor
-        const_iterator (const IntMatrix* matrix, int row, int col, bool is_last = false);
-        const int& operator*() const;
-    };
-
-    /*
     class IntMatrix::iterator {
        private:
         const IntMatrix* matrix;  // the matrix this iterator points to
@@ -118,7 +88,38 @@ namespace mtm {
         bool operator== (const const_iterator& it) const;
         bool operator!= (const const_iterator& it) const;
     };
-    */
+
+
+
+    //    class IntMatrix::T_iterator {
+    //    private:
+    //     const IntMatrix* matrix;  // the matrix this iterator points to
+    //     int row, col;
+    //     bool is_last;//TODO לבדור אם יש הבדל בין const ל בלי 
+    //     T_iterator (const IntMatrix* matrix, int row, int col, bool is_last = false); 
+    //     friend class IntMatrix;  // allow IntMatrix to call the c'tor
+    //    public:
+    //     T_iterator() = delete;
+    //     T_iterator& operator= (const T_iterator& it);
+    //     T_iterator& operator++();
+    //     T_iterator operator++ (int);
+    //     bool operator== (const T_iterator& it) const;
+    //     bool operator!= (const T_iterator& it) const;
+    // };
+
+    // class IntMatrix::iterator : public IntMatrix::T_iterator {
+    //    public:  // TODO check if needed to move to private  !!!! // TODO check if need to make destructor
+    //     iterator (const IntMatrix* matrix, int row, int col, bool is_last = false);
+    //     int& operator*() const;
+    // };
+
+    // class IntMatrix::const_iterator : public IntMatrix::T_iterator {
+    //    public:  // TODO check if needed to move to private  !!!! // TODO check if need to make destructor
+    //     const_iterator (const IntMatrix* matrix, int row, int col, bool is_last = false);
+    //     const int& operator*() const;
+    // };
+
+  
 }  // namespace mtm
 
 #endif  // EX3_INT_MATRIX_H

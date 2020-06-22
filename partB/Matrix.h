@@ -7,10 +7,11 @@
 
 namespace mtm {
 
-    template < typename T >
+    template< typename T >
     class Matrix {
        private:
-       
+        T** matrix;
+        
        public:
     };  // class Matrix
 
