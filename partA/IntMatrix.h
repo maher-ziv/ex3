@@ -89,36 +89,6 @@ namespace mtm {
         bool operator!= (const const_iterator& it) const;
     };
 
-
-
-    //    class IntMatrix::T_iterator {
-    //    private:
-    //     const IntMatrix* matrix;  // the matrix this iterator points to
-    //     int row, col;
-    //     bool is_last;//TODO לבדור אם יש הבדל בין const ל בלי 
-    //     T_iterator (const IntMatrix* matrix, int row, int col, bool is_last = false); 
-    //     friend class IntMatrix;  // allow IntMatrix to call the c'tor
-    //    public:
-    //     T_iterator() = delete;
-    //     T_iterator& operator= (const T_iterator& it);
-    //     T_iterator& operator++();
-    //     T_iterator operator++ (int);
-    //     bool operator== (const T_iterator& it) const;
-    //     bool operator!= (const T_iterator& it) const;
-    // };
-
-    // class IntMatrix::iterator : public IntMatrix::T_iterator {
-    //    public:  // TODO check if needed to move to private  !!!! // TODO check if need to make destructor
-    //     iterator (const IntMatrix* matrix, int row, int col, bool is_last = false);
-    //     int& operator*() const;
-    // };
-
-    // class IntMatrix::const_iterator : public IntMatrix::T_iterator {
-    //    public:  // TODO check if needed to move to private  !!!! // TODO check if need to make destructor
-    //     const_iterator (const IntMatrix* matrix, int row, int col, bool is_last = false);
-    //     const int& operator*() const;
-    // };
-
   
 }  // namespace mtm
 
