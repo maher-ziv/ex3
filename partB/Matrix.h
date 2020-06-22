@@ -200,7 +200,7 @@ namespace mtm {
     Matrix<T> operator+ (const Matrix<T>& m1, const Matrix<T>& m2) {}
 
     template<typename T>
-    std::ostream& mtm::operator<< (std::ostream& os, const Matrix<T>& m) {
+    std::ostream& operator<< (std::ostream& os, const Matrix<T>& m) {
         typename Matrix<T>::const_iterator begin = m.begin();
         typename Matrix<T>::const_iterator end = m.end();
         return printMatrix (os, begin, end, m.width());
