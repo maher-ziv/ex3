@@ -159,7 +159,7 @@ namespace mtm {
             throw IllegalInitialization(); // TODO test it
         }
 
-        
+
 
     }
 
