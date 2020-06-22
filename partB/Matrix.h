@@ -46,7 +46,7 @@ namespace mtm {
         friend std::ostream& operator<< (std::ostream& os, const Matrix& m);
 
         class iterator;
-        iterator begin();// TODO check if const needed
+        iterator begin();  // TODO check if const needed
         iterator end();
         class const_iterator;
         const const_iterator begin() const;
@@ -82,10 +82,23 @@ namespace mtm {
     template<typename T>
     Matrix<T> operator- (const Matrix<T>& m1, const Matrix<T>& m2);
 
+    // template<typename T>
+    // Matrix<T> operator+ (const Matrix<T>& m1, const T& t);
+    // template<typename T>
+    // Matrix<T> operator+ (const T& t, const Matrix<T>& m2);
+
+    template<typename T, typename S>
+    Matrix<T> operator+ (const S& m1, const T& t);
+
     template<typename T>
-    Matrix<T> operator+ (const Matrix<T>& m1, const T& t);
+    Matrix<T> operator+ (const Matrix<T>& m1, const T& t) {
+        return operator<Matrix<T> , T> + (m1,  t);
+    }
     template<typename T>
-    Matrix<T> operator+ (const T& t, const Matrix<T>& m2);
+    Matrix<T> operator+ (const T& t, const Matrix<T>& m){
+     return operator<T, Matrix<T>> + (m,  t);
+    }
+
 
     template<typename T>
     std::ostream& operator<< (std::ostream& os, const Matrix<T>& m);  // TODO
@@ -189,8 +202,13 @@ namespace mtm {
     }
 
     template<typename T>
-    Matrix<T> operator+ (const Matrix<T>& m1, const Matrix<T>& m2){
+    Matrix<T> operator+ (const Matrix<T>& m1, const Matrix<T>& m2) {}
 
+    template<typename T>
+    std::ostream& mtm::operator<< (std::ostream& os, const Matrix<T>& m) {
+        Matrix<T>::const_iterator begin = m.begin();
+        Matrix<T>::const_iterator end = m.end();
+        return os << ;
     }
 
 }  // namespace mtm
