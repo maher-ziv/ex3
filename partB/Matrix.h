@@ -32,8 +32,8 @@ namespace mtm {
         Matrix operator-() const;
         Matrix& operator+= (const T& num);
 
-        int& operator() (int row_val, int col_val);
-        const int operator() (int row_val, int col_val) const;
+        T& operator() (int row_val, int col_val);
+        const T operator() (int row_val, int col_val) const;
 
         Matrix< bool > operator< (const T x) const;
         Matrix< bool > operator> (const T x) const;
