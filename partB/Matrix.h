@@ -164,7 +164,7 @@ namespace mtm {
     }
 
     template<typename T>
-    mtm::Matrix<T> mtm::Matrix<T>::Diagonal (int dimension, const T& initial_val) {
+    Matrix<T> Matrix<T>::Diagonal (int dimension, const T& initial_val) {
         if (dimension <= 0) {
             throw IllegalInitialization();  // TODO test it
         }
@@ -174,6 +174,18 @@ namespace mtm {
             diagonal (i, i) = initial_val;
         }
         return diagonal;
+    }
+
+    template<typename T>
+    Matrix<T> Matrix<T>::transpose() const {
+        Dimensions t_dimension (width(), height());
+        Matrix<T> t_matrix (t_dimension);
+        for (int i = 0; i < width(); i++) {
+            for (int j = 0; j < height(); j++) {
+                t_matrix (i, j) = matrix[j][i];
+            }
+        }
+        return t_matrix;
     }
 
 }  // namespace mtm
