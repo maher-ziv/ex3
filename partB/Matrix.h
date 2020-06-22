@@ -46,7 +46,7 @@ namespace mtm {
         friend std::ostream& operator<< (std::ostream& os, const Matrix& m);
 
         class iterator;
-        iterator begin();  // TODO check if const needed
+        iterator begin();// TODO check if const needed
         iterator end();
         class const_iterator;
         const const_iterator begin() const;
@@ -186,6 +186,11 @@ namespace mtm {
             }
         }
         return t_matrix;
+    }
+
+    template<typename T>
+    Matrix<T> operator+ (const Matrix<T>& m1, const Matrix<T>& m2){
+
     }
 
 }  // namespace mtm
