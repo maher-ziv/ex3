@@ -44,7 +44,7 @@ mtm::IntMatrix mtm::IntMatrix::Identity (int dimension) {
     Dimensions dim (dimension, dimension);
     mtm::IntMatrix identity (dim);
     for (int i = 0; i < dimension; i++) {
-        identity (i, i) = 1; 
+        identity (i, i) = 1;
     }
     return identity;
 }
@@ -80,7 +80,7 @@ mtm::IntMatrix& mtm::IntMatrix::operator= (const IntMatrix& m) {
         delete[] matrix[i];
     }
     delete[] matrix;
-    dimension = m.dimension; 
+    dimension = m.dimension;
     matrix = new int*[height()];
     for (int i = 0; i < height(); i++) {
         matrix[i] = new int[width()];
@@ -101,18 +101,18 @@ int mtm::IntMatrix::operator() (int row_val, int col_val) const {
 }
 
 mtm::IntMatrix mtm::IntMatrix::operator-() const {
-
+    IntMatrix tmp (*this);
     for (int i = 0; i < height(); i++) {
         for (int j = 0; j < width(); j++) {
-            matrix[i][j] *= -1;
+            tmp.matrix[i][j] *= -1;
         }
     }
-    return *this;
+    return tmp;
 }
 
 mtm::IntMatrix& mtm::IntMatrix::operator+= (const mtm::IntMatrix& b) {
     // matrix a and b not from the same dimension which mean casting happened and dime of b is one i.e.1x1
-    if (size() > b.size()) {
+    if (size() > b.size()) { //TODO  b.size() == 1
         for (int i = 0; i < height(); i++) {
             for (int j = 0; j < width(); j++) {
                 matrix[i][j] += b (0, 0);
@@ -143,59 +143,89 @@ mtm::IntMatrix mtm::operator+ (const mtm::IntMatrix& m1, const mtm::IntMatrix& m
     mtm::IntMatrix tmp_2 = tmp_1.size() == m1.size() ? m2 : m1;
     return tmp_1 += tmp_2;
 }
-
+//TODO need more testing
 mtm::IntMatrix mtm::operator- (const IntMatrix& m1, const IntMatrix& m2) {
-    IntMatrix tmp = -m1;
-    return tmp + m2;
+    IntMatrix tmp = -m2;
+    return m1 + tmp;
 }
 
-
-IntMatrix IntMatrix::operator< (const int x) {
+IntMatrix IntMatrix::operator< (const int x) const {
     IntMatrix tmp (*this);
-    for (mtm::IntMatrix::iterator it = begin(), it_2 = tmp.begin(); it != end(); ++it, ++it_2) {
+    mtm::IntMatrix::iterator it_2 = tmp.begin();
+    for (mtm::IntMatrix::const_iterator it = begin(); it != end(); ++it, ++it_2) {
         *it_2 = (*it) < x ? 1 : 0;
     }
     return tmp;
 }
-IntMatrix IntMatrix::operator> (const int x) {
+
+IntMatrix IntMatrix::operator> (const int x) const {
     IntMatrix tmp (*this);
-    for (mtm::IntMatrix::iterator it = begin(), it_2 = tmp.begin(); it != end(); ++it, ++it_2) {
-        *it_2 = x > *it ? 1 : 0;
+    mtm::IntMatrix::iterator it_2 = tmp.begin();
+    for (mtm::IntMatrix::const_iterator it = begin(); it != end(); ++it, ++it_2) {
+        *it_2 = *it > x ? 1 : 0;
     }
     return tmp;
 }
-IntMatrix IntMatrix::operator<= (const int x) {
-    IntMatrix tmp (*this);
-    for (mtm::IntMatrix::iterator it = begin(), it_2 = tmp.begin(); it != end(); ++it, ++it_2) {
-        *it_2 = *it <= x ? 1 : 0;
-    }
-    return tmp;
+
+IntMatrix IntMatrix::operator<= (const int x) const {
+    IntMatrix tmp = *this > x;
+    return tmp != 1; //TODO לשאול אם זה נחשב למספר קסם 
 }
-IntMatrix IntMatrix::operator>= (const int x) {
-    IntMatrix tmp (*this);
-    for (mtm::IntMatrix::iterator it = begin(), it_2 = tmp.begin(); it != end(); ++it, ++it_2) {
-        *it_2 = x >= *it ? 1 : 0;
-    }
-    return tmp;
+
+IntMatrix IntMatrix::operator>= (const int x) const {
+    IntMatrix tmp = *this < x;
+    return tmp != 1; //TODO לשאול אם זה נחשב למספר קסם 
 }
-IntMatrix IntMatrix::operator== (const int x) {
+
+IntMatrix IntMatrix::operator== (const int x) const {
     IntMatrix tmp (*this);
-    for (mtm::IntMatrix::iterator it = begin(), it_2 = tmp.begin(); it != end(); ++it, ++it_2) {
+    mtm::IntMatrix::iterator it_2 = tmp.begin();
+    for (mtm::IntMatrix::const_iterator it = begin(); it != end(); ++it, ++it_2) {
         *it_2 = *it == x ? 1 : 0;
     }
     return tmp;
 }
-IntMatrix IntMatrix::operator!= (const int x) {
-    IntMatrix tmp (*this);
-    for (mtm::IntMatrix::iterator it = begin(), it_2 = tmp.begin(); it != end(); ++it, ++it_2) {
-        *it_2 = *it != x ? 1 : 0;
-    }
-    return tmp;
+
+IntMatrix IntMatrix::operator!= (const int x) const {
+    IntMatrix tmp = *this == x ;
+    return  tmp == 0;//TODO לשאול אם זה נחשב למספר קסם 
 }
+
+/*
+
+//TODO לבדוק מה עדיף
+// IntMatrix IntMatrix::operator<= (const int x) const {
+//     IntMatrix tmp (*this);
+//     mtm::IntMatrix::iterator it_2 = tmp.begin();
+//     for (mtm::IntMatrix::const_iterator it = begin(); it != end(); ++it, ++it_2) {
+//         *it_2 = *it <= x ? 1 : 0;
+//     }
+//     return tmp;
+// }
+
+// IntMatrix IntMatrix::operator>= (const int x) const {
+//     IntMatrix tmp (*this);
+//     mtm::IntMatrix::iterator it_2 = tmp.begin();
+//     for (mtm::IntMatrix::const_iterator it = begin(); it != end(); ++it, ++it_2) {
+//         *it_2 = x >= *it ? 1 : 0;
+//     }
+//     return tmp;
+// }
+
+
+// IntMatrix IntMatrix::operator!= (const int x) const {
+//     IntMatrix tmp (*this);
+//     mtm::IntMatrix::iterator it_2 = tmp.begin();
+//     for (mtm::IntMatrix::const_iterator it = begin(); it != end(); ++it, ++it_2) {
+//         *it_2 = *it != x ? 1 : 0;
+//     }
+//     return tmp;
+// }
+
+ == */
 
 // TODO need testing
 std::ostream& mtm::operator<< (std::ostream& os, const IntMatrix& m) {
-
     int* tmp = new int[m.size()];
     int i = 0;
     for (mtm::IntMatrix::const_iterator it = m.begin(); it != m.end(); ++it) {
@@ -225,6 +255,7 @@ bool mtm::any (const mtm::IntMatrix& a) {
     return false;
 }
 
+//class T_iterator
 IntMatrix::T_iterator::T_iterator (const IntMatrix* matrix, int row, int col, bool is_last)
     : matrix (matrix), row (row), col (col), is_last (is_last) {}
 
@@ -267,6 +298,7 @@ bool IntMatrix::T_iterator::operator!= (const T_iterator& it) const {
     return !(*this == it);
 }
 
+// class IntMatrix::iterator
 IntMatrix::iterator::iterator (const IntMatrix* matrix, int row, int col, bool is_last)
     : IntMatrix::T_iterator (matrix, row, col, is_last) {}
 
@@ -281,6 +313,8 @@ IntMatrix::iterator IntMatrix::end() {
 int& IntMatrix::iterator::operator*() const {
     return matrix->matrix[row - 1][col - 1];
 }
+
+// class IntMatrix::const_iterator
 IntMatrix::const_iterator::const_iterator (const IntMatrix* matrix, int row, int col, bool is_last)
     : IntMatrix::T_iterator (matrix, row, col, is_last) {}
 
@@ -296,6 +330,119 @@ const IntMatrix::const_iterator IntMatrix::end() const {
     return const_iterator (this, height(), width(), true);
 }
 
+/*
+//class IntMatrix::iterator
+IntMatrix::iterator::iterator (const IntMatrix* matrix, int row, int col, bool is_last)
+    : matrix (matrix), row (row), col (col), is_last (is_last) {}
+
+mtm::IntMatrix::iterator &mtm::IntMatrix::iterator::operator=(const mtm::IntMatrix::iterator &it){
+    if (this == &it) {
+        return *this;
+    }
+    matrix = it.matrix;
+    row = it.row;
+    col = it.col;
+    is_last = it.is_last;
+    return *this;
+}
+IntMatrix::iterator& IntMatrix::iterator::operator++() {
+    if (col == matrix->width()) {
+        if (row != matrix->height()) {
+            col = 1;
+            row++;
+            return *this;
+        } else {
+            is_last = true;
+            return *this;
+        }
+    }
+    col++;
+    return *this;
+}
+
+IntMatrix::iterator IntMatrix::iterator::operator++ (int) {
+    iterator result = *this;
+    ++*this;
+    return result;
+}
+
+bool IntMatrix::iterator::operator== (const iterator& it) const {
+    return (row == it.row && col == it.col && is_last == it.is_last);
+}
+
+bool IntMatrix::iterator::operator!= (const iterator& it) const {
+    return !(*this == it);
+}
+
+IntMatrix::iterator IntMatrix::begin() {
+    return iterator (this, 1, 1, false);
+}
+
+IntMatrix::iterator IntMatrix::end() {
+    return iterator (this, height(), width(), true);
+}
+
+int& IntMatrix::iterator::operator*() const  {
+    return matrix->matrix[row - 1][col - 1];
+}
+
+
+//class IntMatrix::const_iterator
+IntMatrix::const_iterator::const_iterator (const IntMatrix* matrix, int row, int col, bool is_last)
+    : matrix (matrix), row (row), col (col), is_last (is_last) {}
+
+IntMatrix::const_iterator& IntMatrix::const_iterator::operator=(const IntMatrix::const_iterator &it){
+    if (this == &it) {
+        return *this;
+    }
+    matrix = it.matrix;
+    row = it.row;
+    col = it.col;
+    is_last = it.is_last;
+    return *this;
+}
+IntMatrix::const_iterator& IntMatrix::const_iterator::operator++() {
+    if (col == matrix->width()) {
+        if (row != matrix->height()) {
+            col = 1;
+            row++;
+            return *this;
+        } else {
+            is_last = true;
+            return *this;
+        }
+    }
+    col++;
+    return *this;
+}
+
+IntMatrix::const_iterator IntMatrix::const_iterator::operator++ (int) {
+    const_iterator result = *this;
+    ++*this;
+    return result;
+}
+
+bool IntMatrix::const_iterator::operator== (const const_iterator& it) const {
+    return (row == it.row && col == it.col && is_last == it.is_last);
+}
+
+bool IntMatrix::const_iterator::operator!= (const const_iterator& it) const {
+    return !(*this == it);
+}
+
+const IntMatrix::const_iterator IntMatrix::begin()const  {
+    return const_iterator (this, 1, 1, false);
+}
+
+const IntMatrix::const_iterator IntMatrix::end() const  {
+    return const_iterator (this, height(), width(), true);
+}
+
+const int& IntMatrix::const_iterator::operator*() const {
+    return matrix->matrix[row - 1][col - 1];
+}
+
+*/
 
 //===========================================================================================================
 //                              ----test----

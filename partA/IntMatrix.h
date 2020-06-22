@@ -27,12 +27,12 @@ namespace mtm {
         int& operator() (int row_val, int col_val);
         int operator() (int row_val, int col_val) const;
         friend std::ostream& operator<< (std::ostream& os, const IntMatrix& m);
-        IntMatrix operator< (const int x);
-        IntMatrix operator> (const int x);
-        IntMatrix operator<= (const int x);
-        IntMatrix operator>= (const int x);
-        IntMatrix operator== (const int x);
-        IntMatrix operator!= (const int x);
+        IntMatrix operator< (const int x) const;
+        IntMatrix operator> (const int x) const;
+        IntMatrix operator<= (const int x) const;
+        IntMatrix operator>= (const int x) const;
+        IntMatrix operator== (const int x) const;
+        IntMatrix operator!= (const int x) const;
 
         int size() const;
         int height() const;
@@ -60,8 +60,8 @@ namespace mtm {
        private:
         const IntMatrix* matrix;  // the matrix this iterator points to
         int row, col;
-        bool is_last;
-        T_iterator (const IntMatrix* matrix, int row, int col, bool is_last = false);
+        bool is_last;//TODO לבדור אם יש הבדל בין const ל בלי 
+        T_iterator (const IntMatrix* matrix, int row, int col, bool is_last = false); 
         friend class IntMatrix;  // allow IntMatrix to call the c'tor
        public:
         T_iterator() = delete;
@@ -95,7 +95,7 @@ namespace mtm {
        public:
         iterator() = delete;
         iterator& operator= (const iterator& it);
-        int& operator*();
+        int& operator*()const;
         iterator& operator++();
         iterator operator++ (int);
         bool operator== (const iterator& it) const;
