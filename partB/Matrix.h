@@ -75,7 +75,7 @@ namespace mtm {
             }
         };
 
-    };  // class Matri x
+    };  // class Matrix
 
     template<typename T>
     Matrix<T> operator+ (const Matrix<T>& m1, const Matrix<T>& m2);
@@ -95,6 +95,7 @@ namespace mtm {
     template<typename T>
     bool any (const Matrix<T>& a);
 
+
     template<typename T>
     void mtm::Matrix<T>::allocate_space() {
         matrix = new T*[height()];
@@ -110,6 +111,17 @@ namespace mtm {
             }
         }
     }
+
+    template<typename T>
+    mtm::Matrix<T>::Matrix(Dimensions dim, const T& initial_val) : dimension(dim) {
+        allocate_space();
+        for (int i = 0; i < height(); i++) {
+            for (int j = 0; j < width(); j++) {
+                matrix[i][j] = initial_val;
+            }
+        }
+    }
+
 
     template<typename T>
     Matrix<T>::Matrix (const Matrix<T>& m) : dimension (m.dimension) {
@@ -162,6 +174,10 @@ namespace mtm {
         
 
     }
+
+
+
+
 
 }  // namespace mtm
 
