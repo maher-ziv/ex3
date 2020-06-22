@@ -69,10 +69,10 @@ namespace mtm {
         class DimensionMismatch {
            public:
             Dimensions dimension1, dimension2;
-            DimensionMismatch (Dimensions dim1, Dimensions dim2) : dim1 (dimension1), dim2 (dimension2) {}
+            DimensionMismatch (Dimensions dim1, Dimensions dim2) : dimension1 (dim1), dimension2 (dim2) {}
             const std::string what() const {
-                return "Mtm matrix error: Dimensionmismatch: " + Dimensions::toString (dimension1) +
-                       Dimensions::toString (dimension2);
+                return "Mtm matrix error: Dimensionmismatch: " + dimension1.toString() +
+                      dimension2.toString() ;
             }
         };
 
@@ -358,7 +358,7 @@ namespace mtm {
 
     template<typename T>
     typename Matrix<T>::const_iterator Matrix<T>::const_iterator::operator++ (int) {
-       typename const_iterator result = *this;
+       const_iterator result = *this;
         ++*this;
         return result;
     }
