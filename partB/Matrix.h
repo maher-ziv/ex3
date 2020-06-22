@@ -120,7 +120,7 @@ namespace mtm {
         }
     }
 
-    template<class T>
+    template<typename T>
     Matrix<T>::~Matrix() {
         for (int i = 0; i < height(); i++) {
             delete[] matrix[i];
@@ -128,7 +128,7 @@ namespace mtm {
         delete[] matrix;
     }
 
-    template<class T>
+    template<typename T>
     Matrix<T>& Matrix<T>::operator= (const Matrix<T>& m) {
         if (this == &m) {
             return *this;
@@ -151,6 +151,16 @@ namespace mtm {
         matrix = tmp_data;
         dimension = m.dimension;
         return *this;
+    }
+
+    template<typename T>
+    mtm::Matrix<T> mtm::Matrix<T>::Diagonal (int dimension, const T& initial_val = T()){
+        if ( dimension <= 0 ){
+            throw IllegalInitialization(); // TODO test it
+        }
+
+        
+
     }
 
 }  // namespace mtm
