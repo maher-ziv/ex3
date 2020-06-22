@@ -92,13 +92,12 @@ namespace mtm {
 
     template<typename T>
     Matrix<T> operator+ (const Matrix<T>& m1, const T& t) {
-        return operator<Matrix<T> , T> + (m1,  t);
+        return operator<Matrix<T>, T> + (m1, t);
     }
     template<typename T>
-    Matrix<T> operator+ (const T& t, const Matrix<T>& m){
-     return operator<T, Matrix<T>> + (m,  t);
+    Matrix<T> operator+ (const T& t, const Matrix<T>& m) {
+        return operator<T, Matrix<T>> + (m, t);
     }
-
 
     template<typename T>
     std::ostream& operator<< (std::ostream& os, const Matrix<T>& m);  // TODO
@@ -208,7 +207,23 @@ namespace mtm {
     std::ostream& mtm::operator<< (std::ostream& os, const Matrix<T>& m) {
         Matrix<T>::const_iterator begin = m.begin();
         Matrix<T>::const_iterator end = m.end();
-        return os << ;
+        return printMatrix (os, begin, end, m.width());
+    }
+
+    template<typename T>
+    T& Matrix<T>::operator() (int row_val, int col_val) {
+        if (row_val < 0 || row_val >= height() || col_val < 0 || col_val >= width()) {
+            throw AccessIllegalElement();
+        }
+        return matrix[row_val][col_val];
+    }
+
+    template<typename T>
+   const T Matrix<T>::operator() (int row_val, int col_val) const  {
+        if (row_val < 0 || row_val >= height() || col_val < 0 || col_val >= width()) {
+            throw AccessIllegalElement();
+        }
+        return matrix[row_val][col_val];
     }
 
 }  // namespace mtm
