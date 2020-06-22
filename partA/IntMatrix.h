@@ -21,7 +21,7 @@ namespace mtm {
 
         IntMatrix& operator= (const IntMatrix& m);
         IntMatrix operator-() const;
-        IntMatrix& operator+= (const IntMatrix& a);
+        IntMatrix& operator+= (const IntMatrix& a);//TODO delete
         IntMatrix& operator+= (const int& num);  // TODO
         int& operator() (int row_val, int col_val);
         int operator() (int row_val, int col_val) const;
@@ -40,7 +40,7 @@ namespace mtm {
         IntMatrix transpose() const;
 
         class iterator;
-        iterator begin() ;  // TODO check if const needed
+        iterator begin() ;  //TODO check if const needed
         iterator end() ;
         class const_iterator;
         const const_iterator begin() const;
