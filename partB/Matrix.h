@@ -102,12 +102,11 @@ namespace mtm {
             try {
                 matrix[i] = new T[width()];
             } catch (const std::bad_alloc& e) {
-                for (int j = 0; j < i; j++){
+                for (int j = 0; j < i; j++) {
                     delete[] matrix[j];
                 }
                 delete[] matrix;
                 throw e;
-
             }
         }
     }
@@ -116,12 +115,41 @@ namespace mtm {
     Matrix<T>::Matrix (const Matrix<T>& m) : dimension (m.dimension) {
         allocate_space();
         Matrix<T>::const_iterator it2 = m.begin();
-        for(Matrix<T>::iterator it = begin() ; it!=end();++it ,++it2){
+        for (Matrix<T>::iterator it = begin(); it != end(); ++it, ++it2) {
             *it = *it2;
         }
+    }
 
-    }  
+    template<class T>
+    Matrix<T>::~Matrix() {
+        for (int i = 0; i < height(); i++) {
+            delete[] matrix[i];
+        }
+        delete[] matrix;
+    }
 
-}// namespace mtm
+    template<class T>
+    Matrix<T>& Matrix<T>::operator= (const Matrix<T>& m) {
+        if (this == &m) {
+            return *this;
+        }
+        T** tmp_data = new T*[m.height()];
+        for (int i = 0; i < m.height(); i++) {  
+            try {
+                tmp_data[i] = new T[m.width()];
+            } catch (const std::bad_alloc& e) { //TODO check if need to catch another throw
+                for (int j = 0; j < i; j++) {
+                    delete[] tmp_data[j];
+                }
+                delete[] tmp_data;
+                throw e;
+            }
+        }
+        matrix = tmp_data;
+        dimension=m.dimension;
+        return *this;
+    }
+
+}  // namespace mtm
 
 #endif  // EX3_MATRIX_H
