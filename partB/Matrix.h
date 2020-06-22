@@ -219,12 +219,14 @@ namespace mtm {
     }
 
     template<typename T>
-   const T Matrix<T>::operator() (int row_val, int col_val) const  {
+    const T Matrix<T>::operator() (int row_val, int col_val) const {
         if (row_val < 0 || row_val >= height() || col_val < 0 || col_val >= width()) {
             throw AccessIllegalElement();
         }
         return matrix[row_val][col_val];
     }
+
+    
 
 }  // namespace mtm
 
