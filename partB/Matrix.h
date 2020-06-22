@@ -8,15 +8,15 @@
 
 namespace mtm {
 
-    template < typename T >
+    template<typename T>
     class Matrix {
-       private:
+        private:
         T** matrix;
-        mtm::Dimensions dimension;
+        Dimensions dimension;
 
-       public:
+        public:
         Matrix() = delete;
-        Matrix (mtm::Dimensions dim, const T& initial_val = T());
+        Matrix (Dimensions dim, const T& initial_val = T());
         // IntMatrix (int scalar_val);
         Matrix (const Matrix& m);
         ~Matrix();
@@ -35,9 +35,9 @@ namespace mtm {
         T& operator() (int row_val, int col_val);
         const T operator() (int row_val, int col_val) const;
 
-        Matrix< bool > operator< (const T x) const;
-        Matrix< bool > operator> (const T x) const;
-        Matrix<bool> operator<= (const T x const;
+        Matrix<bool> operator< (const T x) const;
+        Matrix<bool> operator> (const T x) const;
+        Matrix<bool> operator<= (const T x) const;
         Matrix<bool> operator>= (const T x) const;
         Matrix<bool> operator== (const T x) const;
         Matrix<bool> operator!= (const T x) const;
@@ -51,24 +51,53 @@ namespace mtm {
         const const_iterator begin() const;
         const const_iterator end() const;
 
-    };  // class Matrix
 
-    template < typename T >
-    Matrix< T > operator+ (const Matrix< T >& m1, const Matrix< T >& m2);
-    template < typename T >
-    Matrix< T > operator- (const Matrix< T >& m1, const Matrix< T >& m2);
 
-    template < typename T >
-    Matrix< T > operator+ (const Matrix< T >& m1, const T& t);
-    template < typename T >
-    Matrix< T > operator+ (const T& t, const Matrix< T >& m2);
 
-    template < typename T >
-    std::ostream& operator<< (std::ostream& os, const Matrix< T >& m);  // TODO
-    template < typename T >
-    bool all (const Matrix< T >& a);
-    template < typename T >
-    bool any (const Matrix< T >& a);
+
+
+        //Exceptions 
+        class AccessIllegalElement {
+            public:
+            const std::string what() const {
+                return "Mtm matrix error: An attempt to access an illegal element";
+            }
+        };
+        class IllegalInitialization{
+            public:
+            const std::string what() const {
+                return "Mtm matrix error: Illegal initialization values";
+            }
+        };
+        class DimensionMismatch {
+            public:
+            Dimensions dimension1, dimension2;
+            DimensionMismatch (Dimensions dim1, Dimensions dim2) : dim1 (dimension1), dim2 (dimension2) {}
+            const std::string what() const {
+                return "Mtm matrix error: Dimensionmismatch: " + Dimensions::toString (dimension1) +
+                       Dimensions::toString (dimension2);
+            }
+        };
+
+    };  // class Matri x
+
+    template<typename T>
+    Matrix<T> operator+ (const Matrix<T>& m1, const Matrix<T>& m2);
+    template<typename T>
+    Matrix<T> operator- (const Matrix<T>& m1, const Matrix<T>& m2);
+
+    template<typename T>
+    Matrix<T> operator+ (const Matrix<T>& m1, const T& t);
+    template<typename T>
+    Matrix<T> operator+ (const T& t, const Matrix<T>& m2);
+
+    template<typename T>
+    std::ostream& operator<< (std::ostream& os, const Matrix<T>& m);  // TODO
+
+    template<typename T>
+    bool all (const Matrix<T>& a);
+    template<typename T>
+    bool any (const Matrix<T>& a);
 
 }  // namespace mtm
 
