@@ -95,7 +95,6 @@ namespace mtm {
     template<typename T>
     bool any (const Matrix<T>& a);
 
-
     template<typename T>
     void mtm::Matrix<T>::allocate_space() {
         matrix = new T*[height()];
@@ -113,7 +112,7 @@ namespace mtm {
     }
 
     template<typename T>
-    mtm::Matrix<T>::Matrix(Dimensions dim, const T& initial_val) : dimension(dim) {
+    mtm::Matrix<T>::Matrix (Dimensions dim, const T& initial_val) : dimension (dim) {
         allocate_space();
         for (int i = 0; i < height(); i++) {
             for (int j = 0; j < width(); j++) {
@@ -121,7 +120,6 @@ namespace mtm {
             }
         }
     }
-
 
     template<typename T>
     Matrix<T>::Matrix (const Matrix<T>& m) : dimension (m.dimension) {
@@ -166,18 +164,17 @@ namespace mtm {
     }
 
     template<typename T>
-    mtm::Matrix<T> mtm::Matrix<T>::Diagonal (int dimension, const T& initial_val = T()){
-        if ( dimension <= 0 ){
-            throw IllegalInitialization(); // TODO test it
+    mtm::Matrix<T> mtm::Matrix<T>::Diagonal (int dimension, const T& initial_val) {
+        if (dimension <= 0) {
+            throw IllegalInitialization();  // TODO test it
         }
-
-
-
+        Dimensions dim (dimension, dimension);
+        Matrix<T> diagonal (dim);
+        for (int i = 0; i < diagonal.height(); i++) {
+            diagonal (i, i) = initial_val;
+        }
+        return diagonal;
     }
-
-
-
-
 
 }  // namespace mtm
 
