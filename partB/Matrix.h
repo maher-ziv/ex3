@@ -134,19 +134,22 @@ namespace mtm {
             return *this;
         }
         T** tmp_data = new T*[m.height()];
-        for (int i = 0; i < m.height(); i++) {  
+        for (int i = 0; i < m.height(); i++) {
             try {
                 tmp_data[i] = new T[m.width()];
-            } catch (const std::bad_alloc& e) { //TODO check if need to catch another throw
+            } catch (const std::bad_alloc& e) {  // TODO check if need to catch another throw
                 for (int j = 0; j < i; j++) {
                     delete[] tmp_data[j];
                 }
                 delete[] tmp_data;
                 throw e;
             }
+            for (int j = 0; j < m.width(); j++) {
+                tmp_data[i][j] = m.matrix[i][j];
+            }
         }
         matrix = tmp_data;
-        dimension=m.dimension;
+        dimension = m.dimension;
         return *this;
     }
 
