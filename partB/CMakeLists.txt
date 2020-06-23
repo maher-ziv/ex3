@@ -7,5 +7,5 @@ set(MTM_FLAGS_RELEASE "${MTM_FLAGS} -DNDEBUG")
 
 set(CMAKE_CXX_FLAG ${MTM_FLAGS})
 
-add_executable(partB  Matrix-v2.h Auxiliaries.cpp ./tests/test_partB.cpp)
+add_executable(partB  Matrix.h Auxiliaries.cpp ./tests/test_partB.cpp)
 

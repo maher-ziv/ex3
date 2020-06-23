@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include "../Matrix-v2.h"
+#include "../Matrix.h"
 
 class Square {
     public: 
@@ -49,17 +49,18 @@ int main(){
     } catch(mtm::Matrix<int>::AccessIllegalElement& e){
         std::cout<<e.what()<<std::endl;
     }
-    try{
-        const mtm::Matrix<int> mat_1(dim_1,4);
-        const mtm::Matrix<int> mat_2=mat_1.apply(Square());
-        std::cout<<mat_1;
-        std::cout<<mat_2(1,2)<<std::endl;
-        mtm::Matrix<int>::const_iterator it = mat_2.end();
-        std::cout<<*it;
-    } catch(mtm::Matrix<int>::AccessIllegalElement& e){
-        std::cout<<e.what()<<std::endl;
-    }
+    // try{
+    //     const mtm::Matrix<int> mat_1(dim_1,4);
+    //     const mtm::Matrix<int> mat_2=mat_1.apply(Square());
+    //     std::cout<<mat_1;
+    //     std::cout<<mat_2(1,2)<<std::endl;
+    //     mtm::Matrix<int>::const_iterator it = mat_2.end();
+    //     std::cout<<*it;
+    // } catch(mtm::Matrix<int>::AccessIllegalElement& e){
+    //     std::cout<<e.what()<<std::endl;
+    // }
 
-    mtm::Array<int> ar(6,6);
+
+    std::cout<<"\nend test"<<std::endl;
 
 }
