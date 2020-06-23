@@ -1,13 +1,13 @@
 #include <iostream>
 #include <string>
-#include "Matrix.h"
+#include "../Matrix-v2.h"
 
-class Square { 
+class Square {
     public: 
-        int operator()(int val){ 
-          return val*val; 
-    } 
-}; 
+        int operator()(int val){
+          return val*val;
+    }
+};
 
 int main(){
     mtm::Dimensions dim_1(2,3);
@@ -59,4 +59,7 @@ int main(){
     } catch(mtm::Matrix<int>::AccessIllegalElement& e){
         std::cout<<e.what()<<std::endl;
     }
+
+    mtm::Array<int> ar(6,6);
+
 }

@@ -7,17 +7,17 @@
 #include "Auxiliaries.h"
 
 namespace mtm {
-    template<typename T> 
+    template<typename T>
     class Array;
 
     template<typename T>
     class Matrix {
-       private:
+        private:
         Array<T> matrix;
         Dimensions dimension;
-        class T_iterator;
+        
 
-       public:
+        public:
         Matrix() = delete;
         Matrix (Dimensions dim, const T& initial_val = T());
         // IntMatrix (int scalar_val);
@@ -35,6 +35,8 @@ namespace mtm {
         Matrix operator-() const;
         Matrix& operator+= (const T& num);
 
+        friend Matrix<T> operator+ (const Matrix<T>& m1, const Matrix<T>& m2);
+        friend Matrix operator- (const Matrix& m1, const Matrix& m2);
         T& operator() (int row_val, int col_val);
         const T operator() (int row_val, int col_val) const;
 
@@ -47,6 +49,8 @@ namespace mtm {
 
         friend std::ostream& operator<< (std::ostream& os, const Matrix& m);
 
+        class T_iterator;//TODO 
+
         // iterator classes
         class iterator;
         iterator begin();  // TODO check if const needed
@@ -54,10 +58,6 @@ namespace mtm {
         class const_iterator;
         const const_iterator begin() const;
         const const_iterator end() const;
-
-    };  // class Matrix
-
-    struct MyExceptions {
 
         struct AccessIllegalElement {
             const std::string what() const {
@@ -76,32 +76,9 @@ namespace mtm {
                 return "Mtm matrix error: Dimensionmismatch: " + dimension1.toString() + dimension2.toString();
             }
         };
-    };  // struct MyExceptions
 
-    template<typename T>
-    std::ostream& operator<< (std::ostream& os, const Matrix<T>& m);  // TODO
+    };  // class Matrix
 
-    template<typename T>
-    Matrix<T> operator+ (const Matrix<T>& m1, const Matrix<T>& m2);
-    template<typename T>
-    Matrix<T> operator- (const Matrix<T>& m1, const Matrix<T>& m2);
-
-    // template<typename T>
-    // Matrix<T> operator+ (const Matrix<T>& m1, const T& t);
-    // template<typename T>
-    // Matrix<T> operator+ (const T& t, const Matrix<T>& m2);
-
-    template<typename T, typename S>
-    Matrix<T> operator+ (const S& m1, const T& t);
-
-    template<typename T>
-    Matrix<T> operator+ (const Matrix<T>& m1, const T& t) {
-        return operator<Matrix<T>, T> + (m1, t);
-    }
-    template<typename T>
-    Matrix<T> operator+ (const T& t, const Matrix<T>& m) {
-        return operator<T, Matrix<T>> + (m, t);
-    }
 
     template<typename T>
     Matrix<T>::Matrix (Dimensions dim, const T& initial_val) : matrix (dim.getRow(), dim.getRow()), dimension (dim) {
@@ -148,7 +125,7 @@ namespace mtm {
     template<typename T>
     Matrix<T> Matrix<T>::Diagonal (int dimension, const T& initial_val) {
         if (dimension <= 0) {
-            throw MyExceptions::IllegalInitialization();  // TODO test it
+            throw Matrix::IllegalInitialization();  // TODO test it
         }
         Dimensions dim (dimension, dimension);
         Matrix<T> diagonal (dim);
@@ -170,8 +147,35 @@ namespace mtm {
         return t_matrix;
     }
 
+
     template<typename T>
-    Matrix<T> operator+ (const Matrix<T>& m1, const Matrix<T>& m2) {}
+    Matrix<T> operator+ (const Matrix<T>& m1, const Matrix<T>& m2){
+       if(m1.size() != m2.size()){
+           throw Matrix<T>::DimensionMismatch(m1.dimension, m2.dimension);
+       }
+
+    }
+    template<typename T>
+    Matrix<T> operator- (const Matrix<T>& m1, const Matrix<T>& m2);
+
+    // template<typename T>
+    // Matrix<T> operator+ (const Matrix<T>& m1, const T& t);
+    // template<typename T>
+    // Matrix<T> operator+ (const T& t, const Matrix<T>& m2);
+
+    //template<typename T, typename S>
+  //  Matrix<T> operator+ (const S& m1, const T& t);
+
+   // template<typename T>
+   // Matrix<T> operator+ (const Matrix<T>& m1, const T& t) {
+  //     return operator<Matrix<T>, T> + (m1, t);
+  //  }
+  //  template<typename T>
+   // Matrix<T> operator+ (const T& t, const Matrix<T>& m) {
+    //    return operator<T, Matrix<T>> + (m, t);
+  //  }
+
+
 
     template<typename T>
     std::ostream& operator<< (std::ostream& os, const Matrix<T>& m) {
@@ -218,18 +222,19 @@ namespace mtm {
 
     template<class T>
     class Matrix<T>::T_iterator {
-       private:
-        const Matrix<T>* matrix;  // the matrix this iterator points to
+   // private:
+    public:
+        const Matrix<T>* p_matrix;  // the matrix this iterator points to
         int row, col;
         bool is_last;
-        T_iterator (const Matrix<T>* matrix, int row, int col, bool is_last = false);
+   // protected:
         friend class Matrix<T>;  // allow IntMatrix to call the c'tor
-
-       public:
+        T_iterator(const Matrix<T>* matrix, int row, int col, bool is_last = false);
+    //public:
         T_iterator& operator= (const T_iterator& it) = default;  // TODO test it!!
         T_iterator (const T_iterator& it) = default;             // TODO test it!!
 
-        T& operator*() const;
+        // T& operator*() const;
         T_iterator& operator++();
         T_iterator operator++ (int);
 
@@ -239,12 +244,12 @@ namespace mtm {
 
     template<typename T>
     Matrix<T>::T_iterator::T_iterator (const Matrix<T>* matrix, int row, int col, bool is_last)
-        : matrix (matrix), row (row), col (col), is_last (is_last) {}
+        : p_matrix(matrix), row (row), col (col), is_last (is_last) {}
 
     template<typename T>
     typename Matrix<T>::T_iterator& Matrix<T>::T_iterator::operator++() {
-        if (col == matrix->width()) {
-            if (row != matrix->height()) {
+        if (col == p_matrix->width()) {
+            if (row != p_matrix->height()) {
                 col = 1;
                 row++;
                 return *this;
@@ -277,12 +282,15 @@ namespace mtm {
 
     template<class T>
     class Matrix<T>::iterator : public T_iterator {
-       private:
+        private:
         iterator (const Matrix<T>* matrix, int row, int col, bool is_last = false);
         friend class Matrix<T>;  // allow IntMatrix to call the c'tor
-       public:
+        public:
         T& operator*() const;
     };
+    template<typename T>
+    Matrix<T>::iterator::iterator(const Matrix<T>* matrix, int row, int col, bool is_last ):
+    T_iterator(matrix,row,col,is_last){}
 
     template<typename T>
     typename Matrix<T>::iterator Matrix<T>::begin() {
@@ -296,16 +304,17 @@ namespace mtm {
 
     template<typename T>
     T& Matrix<T>::iterator::operator*() const {
-        return matrix->matrix (row - 1, col - 1);
+
+        return p_matrix->matrix(row - 1, , col - 1) ;
     }
     // -- end-of iterator ---
 
     template<class T>
-    class Matrix<T>::const_iterator : public T_iterator {
-       private:
+    class Matrix<T>::const_iterator : public Matrix<T>::T_iterator {
+        private:
         const_iterator (const Matrix<T>* matrix, int row, int col, bool is_last = false);
         friend class Matrix<T>;  // allow IntMatrix to call the c'tor
-       public:
+        public:
         const T& operator*() const;
     };
 
@@ -325,16 +334,18 @@ namespace mtm {
 
     template<typename T>
     const T& Matrix<T>::const_iterator::operator*() const {
-        return matrix->matrix (row - 1, col - 1);
+        return p_matrix->matrix(row - 1, col - 1);
     }
     // -- end-of const_iterator ---
 
+
     template<typename T>
     class Array {
-       public:
+        private:
         T** data;
         int row_size;
         int col_size;
+        friend class Matrix<T>;
 
         Array (int row = 1, int col = 1) : row_size (row), col_size (col) {
             data = new T*[row_size];
@@ -388,14 +399,14 @@ namespace mtm {
 
         T& operator() (int row_val, int col_val) {
             if (row_val < 0 || row_val >= row_size || col_val < 0 || col_val >= col_size) {
-                throw MyExceptions::AccessIllegalElement::what();  // TODO test it
+                throw Matrix<T>::AccessIllegalElement();  // TODO test it
             }
             return data[row_val][col_val];
         }
 
         const T operator() (int row_val, int col_val) const {
             if (row_val < 0 || row_val >= row_size || col_val < 0 || col_val >= col_size) {
-                throw MyExceptions::AccessIllegalElement::what();  // TODO test it
+                throw Matrix<T>::AccessIllegalElement();  // TODO test it
             }
 
             return data[row_val][col_val];
@@ -419,9 +430,14 @@ namespace mtm {
             }
         }
 
-        // Array() = delete; //TODO
+        // Array() = delete; //TODO לבדוק אם צריך
     };  // Array class
 
 }  // namespace mtm
+
+// namespace Array {
+
+
+// }  // namespace Array
 
 #endif  // EX3_MATRIX_H
