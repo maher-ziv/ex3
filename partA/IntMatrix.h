@@ -15,17 +15,19 @@ namespace mtm {
        public:
         IntMatrix() = delete;
         IntMatrix (mtm::Dimensions dimension, int initial_val = 0);
-        IntMatrix (int scalar_val);
+        // IntMatrix (int scalar_val);
         IntMatrix (const IntMatrix& m);
         ~IntMatrix();
 
         IntMatrix& operator= (const IntMatrix& m);
         IntMatrix operator-() const;
-        IntMatrix& operator+= (const IntMatrix& a);//TODO delete
-        IntMatrix& operator+= (const int& num);  // TODO
+        // IntMatrix& operator+= (const IntMatrix& a);//TODO delete
+        IntMatrix& operator+= (const int num);  // TODO
         int& operator() (int row_val, int col_val);
         int operator() (int row_val, int col_val) const;
+
         friend std::ostream& operator<< (std::ostream& os, const IntMatrix& m);
+
         IntMatrix operator< (const int x) const;
         IntMatrix operator> (const int x) const;
         IntMatrix operator<= (const int x) const;
@@ -36,12 +38,14 @@ namespace mtm {
         int size() const;
         int height() const;
         int width() const;
+
         static IntMatrix Identity (int dimension);
         IntMatrix transpose() const;
 
         class iterator;
-        iterator begin() ;  //TODO check if const needed
-        iterator end() ;
+        iterator begin();  // TODO check if const needed
+        iterator end();
+
         class const_iterator;
         const const_iterator begin() const;
         const const_iterator end() const;
@@ -51,6 +55,8 @@ namespace mtm {
 
     IntMatrix operator+ (const IntMatrix& m1, const IntMatrix& m2);
     IntMatrix operator- (const IntMatrix& m1, const IntMatrix& m2);
+    IntMatrix operator+ (const IntMatrix& m,  int x);
+    IntMatrix operator+ ( int x, const IntMatrix& m);
     std::ostream& operator<< (std::ostream& os, const IntMatrix& m);  // TODO
     bool all (const IntMatrix& a);
     bool any (const IntMatrix& a);
@@ -65,7 +71,7 @@ namespace mtm {
        public:
         iterator() = delete;
         iterator& operator= (const iterator& it);
-        int& operator*()const;
+        int& operator*() const;
         iterator& operator++();
         iterator operator++ (int);
         bool operator== (const iterator& it) const;
@@ -89,8 +95,6 @@ namespace mtm {
         bool operator!= (const const_iterator& it) const;
     };
 
-    
-  
 }  // namespace mtm
 
 #endif  // EX3_INT_MATRIX_H

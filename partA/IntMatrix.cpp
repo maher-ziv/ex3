@@ -34,12 +34,6 @@ mtm::IntMatrix::~IntMatrix() {
     delete[] matrix;
 }
 
-mtm::IntMatrix::IntMatrix (int scalar_val) : dimension (1, 1) {
-    matrix = new int*[height()];
-    matrix[0] = new int[width()];
-    matrix[0][0] = scalar_val;
-}
-
 mtm::IntMatrix mtm::IntMatrix::Identity (int dimension) {
     Dimensions dim (dimension, dimension);
     mtm::IntMatrix identity (dim);
@@ -110,25 +104,7 @@ mtm::IntMatrix mtm::IntMatrix::operator-() const {
     return tmp;
 }
 
-mtm::IntMatrix& mtm::IntMatrix::operator+= (const mtm::IntMatrix& b) {
-    // matrix a and b not from the same dimension which mean casting happened and dime of b is one i.e.1x1
-    if (size() > b.size()) {  // TODO  b.size() == 1
-        for (int i = 0; i < height(); i++) {
-            for (int j = 0; j < width(); j++) {
-                matrix[i][j] += b (0, 0);
-            }
-        }
-    } else {
-        for (int i = 0; i < height(); i++) {
-            for (int j = 0; j < width(); j++) {
-                matrix[i][j] += b (i, j);
-            }
-        }
-    }
-    return *this;
-}
-// TODO  לבדוק אם צריך גם זה או מספיק אחד לשניהם
-IntMatrix& IntMatrix::operator+= (const int& num) {
+IntMatrix& IntMatrix::operator+= (const int num) {
     for (int i = 0; i < height(); i++) {
         for (int j = 0; j < width(); j++) {
             matrix[i][j] += num;
@@ -138,17 +114,25 @@ IntMatrix& IntMatrix::operator+= (const int& num) {
 }
 
 mtm::IntMatrix mtm::operator+ (const mtm::IntMatrix& m1, const mtm::IntMatrix& m2) {
-    // if casting happened and dime of a or b is one i.e. 1x1  , this meanthat the user want to add scalar
-    mtm::IntMatrix tmp_1 = m1.size() >= m2.size() ? m1 : m2;
-    mtm::IntMatrix tmp_2 = tmp_1.size() == m1.size() ? m2 : m1;
-    return tmp_1 += tmp_2;
+    IntMatrix tmp (m1);
+    IntMatrix::const_iterator it1 = m1.begin(), it2 = m2.begin();
+    for (IntMatrix::iterator it = tmp.begin(); it != tmp.end(); ++it , ++it1,++it2) {
+        *it = *it1 + *it2;
+    }
+    return tmp;
 }
-// TODO need more testing
+
 mtm::IntMatrix mtm::operator- (const IntMatrix& m1, const IntMatrix& m2) {
     IntMatrix tmp = -m2;
     return m1 + tmp;
 }
-
+IntMatrix mtm::operator+ (const IntMatrix& m,  int x) {
+    IntMatrix tmp (m);
+    return tmp+=x;
+}
+IntMatrix mtm::operator+ (  int  x, const IntMatrix& m){
+    return m+x;
+}
 IntMatrix IntMatrix::operator< (const int x) const {
     IntMatrix tmp (*this);
     mtm::IntMatrix::iterator it_2 = tmp.begin();
@@ -191,40 +175,6 @@ IntMatrix IntMatrix::operator!= (const int x) const {
     return tmp == 0;  // TODO לשאול אם זה נחשב למספר קסם
 }
 
-/*
-
-//TODO לבדוק מה עדיף
-// IntMatrix IntMatrix::operator<= (const int x) const {
-//     IntMatrix tmp (*this);
-//     mtm::IntMatrix::iterator it_2 = tmp.begin();
-//     for (mtm::IntMatrix::const_iterator it = begin(); it != end(); ++it, ++it_2) {
-//         *it_2 = *it <= x ? 1 : 0;
-//     }
-//     return tmp;
-// }
-
-// IntMatrix IntMatrix::operator>= (const int x) const {
-//     IntMatrix tmp (*this);
-//     mtm::IntMatrix::iterator it_2 = tmp.begin();
-//     for (mtm::IntMatrix::const_iterator it = begin(); it != end(); ++it, ++it_2) {
-//         *it_2 = x >= *it ? 1 : 0;
-//     }
-//     return tmp;
-// }
-
-
-// IntMatrix IntMatrix::operator!= (const int x) const {
-//     IntMatrix tmp (*this);
-//     mtm::IntMatrix::iterator it_2 = tmp.begin();
-//     for (mtm::IntMatrix::const_iterator it = begin(); it != end(); ++it, ++it_2) {
-//         *it_2 = *it != x ? 1 : 0;
-//     }
-//     return tmp;
-// }
-
- == */
-
-// TODO need testing
 std::ostream& mtm::operator<< (std::ostream& os, const IntMatrix& m) {
     int* tmp = new int[m.size()];
     int i = 0;

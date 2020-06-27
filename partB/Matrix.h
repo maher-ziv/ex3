@@ -20,6 +20,7 @@ namespace mtm {
         T** matrix;
         mtm::Dimensions dimension;
         void allocate_space();
+        template<typename PT>  // PT = pointer_type
         class T_iterator;
 
        public:
@@ -37,28 +38,31 @@ namespace mtm {
 
         Matrix& operator= (const Matrix& m);
         Matrix operator-() const;
-        Matrix& operator+= (T num);
+        Matrix& operator+= (const T& num);
         friend Matrix<T> operator+<T> (const Matrix<T>& m1, const Matrix<T>& m2);
 
         T& operator() (int row_val, int col_val);
         const T operator() (int row_val, int col_val) const;
 
-        Matrix<bool> operator< (const T x) const;
-        Matrix<bool> operator> (const T x) const;
-        Matrix<bool> operator<= (const T x) const;
-        Matrix<bool> operator>= (const T x) const;
-        Matrix<bool> operator== (const T x) const;
-        Matrix<bool> operator!= (const T x) const;
+        Matrix<bool> operator< (const T& x) const;
+        Matrix<bool> operator> (const T& x) const;
+        Matrix<bool> operator<= (const T& x) const;
+        Matrix<bool> operator>= (const T& x) const;
+        Matrix<bool> operator== (const T& x) const;
+        Matrix<bool> operator!= (const T& x) const;
 
         friend std::ostream& operator<<<T> (std::ostream& os, const Matrix& m);
 
-        class iterator;
+        typedef T_iterator<T> iterator;
         iterator begin();  // TODO check if const needed
         iterator end();
 
-        class const_iterator;
+        typedef T_iterator<const T> const_iterator;
         const const_iterator begin() const;
         const const_iterator end() const;
+
+        template<typename Predicate>
+        Matrix<T> apply (Predicate pred) const;
 
         class AccessIllegalElement;
         class IllegalInitialization;
@@ -104,7 +108,7 @@ namespace mtm {
     }
 
     template<typename T>
-    void mtm::Matrix<T>::allocate_space() {
+    void Matrix<T>::allocate_space() {
         matrix = new T*[height()];
         for (int i = 0; i < height(); i++) {  // TODO check the while !!!
             try {
@@ -158,15 +162,21 @@ namespace mtm {
         for (int i = 0; i < m.height(); i++) {
             try {
                 tmp_data[i] = new T[m.width()];
+                for (int j = 0; j < m.width(); j++) {
+                    tmp_data[i][j] = m.matrix[i][j];
+                }
             } catch (const std::bad_alloc& e) {  // TODO check if need to catch another throw
                 for (int j = 0; j < i; j++) {
                     delete[] tmp_data[j];
                 }
                 delete[] tmp_data;
                 throw e;
-            }
-            for (int j = 0; j < m.width(); j++) {
-                tmp_data[i][j] = m.matrix[i][j];
+            } catch (...) {
+                for (int j = 0; j < i; j++) {
+                    delete[] tmp_data[j];
+                }
+                delete[] tmp_data;
+                throw ;
             }
         }
         matrix = tmp_data;
@@ -230,7 +240,7 @@ namespace mtm {
     }
 
     template<typename T>
-    Matrix<T> operator+ (const mtm::Matrix<T>& m1, const mtm::Matrix<T>& m2) {
+    Matrix<T> operator+ (const Matrix<T>& m1, const Matrix<T>& m2) {
         if (m1.height() != m2.height() || m1.width() != m2.width()) {
             Dimensions dim1 (m1.height(), m1.width());
             Dimensions dim2 (m2.height(), m2.width());
@@ -250,15 +260,15 @@ namespace mtm {
     }
 
     template<class T>
-    Matrix<T>& Matrix<T>::operator+= (T t) {
+    Matrix<T>& Matrix<T>::operator+= (const T& x) {
         for (typename Matrix<T>::iterator it = begin(); it != end(); ++it) {
-            *it += t;
+            *it += x;
         }
         return *this;
     }
 
     template<typename T>  // TODO לבדןק אפ אפשר לקצר
-    Matrix<T> operator+ (const Matrix<T>& m1, T t) {
+    Matrix<T> operator+ (const Matrix<T>& m1, const T& t) {
         Matrix<T> tmp (m1);  // TODO לבדוק אם זה בסדר והוא באמת מחזיר עותק
         for (typename Matrix<T>::iterator it = tmp.begin(); it != tmp.end(); ++it) {
             *it += t;
@@ -267,12 +277,12 @@ namespace mtm {
     }
 
     template<typename T>
-    Matrix<T> operator+ (T t, const Matrix<T>& m2) {
+    Matrix<T> operator+ (const T& t, const Matrix<T>& m2) {
         return m2 + t;
     }
 
     template<typename T>
-    Matrix<bool> Matrix<T>::operator< (T x) const {
+    Matrix<bool> Matrix<T>::operator< (const T& x) const {
         Matrix<bool> tmp (this->dimension);
         for (int i = 0; i < height(); i++) {
             for (int j = 0; j < width(); j++) {
@@ -282,7 +292,7 @@ namespace mtm {
         return tmp;
     }
     template<class T>
-    Matrix<bool> Matrix<T>::operator> (T x) const {
+    Matrix<bool> Matrix<T>::operator> (const T& x) const {
         Matrix<bool> tmp (this->dimension);
         for (int i = 0; i < height(); i++) {
             for (int j = 0; j < width(); j++) {
@@ -292,17 +302,17 @@ namespace mtm {
         return tmp;
     }
     template<typename T>
-    Matrix<bool> Matrix<T>::operator<= (T x) const {
+    Matrix<bool> Matrix<T>::operator<= (const T& x) const {
         Matrix<bool> tmp = *this > x;
         return tmp != 1;  // TODO לשאול אם זה נחשב למספר קסם
     }
     template<typename T>
-    Matrix<bool> Matrix<T>::operator>= (T x) const {
+    Matrix<bool> Matrix<T>::operator>= (const T& x) const {
         Matrix<bool> tmp = *this < x;
         return tmp != 1;  // TODO לשאול אם זה נחשב למספר קסם
     }
     template<typename T>
-    Matrix<bool> Matrix<T>::operator== (T x) const {
+    Matrix<bool> Matrix<T>::operator== (const T& x) const {
         Matrix<bool> tmp (this->dimension);
         for (int i = 0; i < this->height(); i++) {
             for (int j = 0; j < width(); j++) {
@@ -312,7 +322,7 @@ namespace mtm {
         return tmp;
     }
     template<typename T>
-    Matrix<bool> Matrix<T>::operator!= (T x) const {
+    Matrix<bool> Matrix<T>::operator!= (const T& x) const {
         Matrix<bool> tmp = ((*this) == x);
         return tmp == 0;  // TODO לשאול אם זה נחשב למספר קסם
     }
@@ -335,65 +345,69 @@ namespace mtm {
         }
         return false;
     }
+
+    template<typename T>
+    template<typename Predicate>
+    Matrix<T> Matrix<T>::apply (Predicate pred) const {
+        Matrix<T> tmp (dimension);
+        typename Matrix<T>::const_iterator it = begin();
+        for (typename Matrix<T>::iterator it2 = tmp.begin(); it2 != tmp.end(); ++it2, ++it) {
+            *it2 = pred (*it);
+        }
+        return tmp;
+    }
+
     // end-of Matrix
 
-    template<class T>
-    class mtm::Matrix<T>::iterator {
+    template<typename T>
+    template<typename PT>  // PT = pointer_type
+    class Matrix<T>::T_iterator {
        private:
         const Matrix<T>* matrix;  // the matrix this iterator points to
         int row, col;
         bool is_last;
-        iterator (const Matrix<T>* matrix, int row, int col, bool is_last = false);
+        T_iterator (const Matrix<T>* matrix, int row, int col, bool is_last = false)
+            : matrix (matrix), row (row), col (col), is_last (is_last) {}
         friend class Matrix<T>;  // allow IntMatrix to call the c'tor
 
        public:
-        iterator& operator= (const iterator& it) = default;  // TODO test it!!
-        iterator (const iterator& it) = default;             // TODO test it!!
+        T_iterator& operator= (const T_iterator& it) = default;  // TODO test it!!
+        T_iterator (const T_iterator& it) = default;             // TODO test it!!
 
-        T& operator*() const;
-        iterator& operator++();
-        iterator operator++ (int);
-
-        bool operator== (const iterator& it) const;
-        bool operator!= (const iterator& it) const;
-    };
-
-    template<typename T>
-    Matrix<T>::iterator::iterator (const Matrix<T>* matrix, int row, int col, bool is_last)
-        : matrix (matrix), row (row), col (col), is_last (is_last) {}
-
-    template<typename T>
-    typename Matrix<T>::iterator& Matrix<T>::iterator::operator++() {
-        if (col == matrix->width()) {
-            if (row != matrix->height()) {
-                col = 1;
-                row++;
-                return *this;
-            } else {
-                is_last = true;
-                return *this;
+        PT& operator*() const {
+            if (is_last || matrix->height() <= row - 1 || matrix->width() <= col - 1) {  // TODO
+                throw typename Matrix<T>::AccessIllegalElement();
             }
+            return matrix->matrix[row - 1][col - 1];
         }
-        col++;
-        return *this;
-    }
+        T_iterator& operator++() {
+            if (col == matrix->width()) {
+                if (row != matrix->height()) {
+                    col = 1;
+                    row++;
+                    return *this;
+                } else {
+                    is_last = true;
+                    return *this;
+                }
+            }
+            col++;
+            return *this;
+        }
+        T_iterator operator++ (int) {
+            return ++*this;  // TODO test it
+            // T_iterator result = *this;
+            //++*this;
+            // return result;
+        }
 
-    template<typename T>
-    typename Matrix<T>::iterator Matrix<T>::iterator::operator++ (int) {
-        iterator result = *this;
-        ++*this;
-        return result;
-    }
-
-    template<typename T>
-    bool Matrix<T>::iterator::operator== (const iterator& it) const {
-        return (row == it.row && col == it.col && is_last == it.is_last);
-    }
-
-    template<typename T>
-    bool Matrix<T>::iterator::operator!= (const iterator& it) const {
-        return !(*this == it);
-    }
+        bool operator== (const T_iterator& it) const {
+            return (row == it.row && col == it.col && is_last == it.is_last);
+        }
+        bool operator!= (const T_iterator& it) const {
+            return !(*this == it);
+        }
+    };
 
     template<typename T>
     typename Matrix<T>::iterator Matrix<T>::begin() {
@@ -406,73 +420,6 @@ namespace mtm {
     }
 
     template<typename T>
-    T& Matrix<T>::iterator::operator*() const {
-        if (is_last || matrix->height() <= row - 1 || matrix->width() <= col - 1) {  // TODO
-            throw typename Matrix<T>::AccessIllegalElement();
-        }
-        return matrix->matrix[row - 1][col - 1];
-    }
-    // end-iterator
-
-    template<class T>
-    class mtm::Matrix<T>::const_iterator {
-       private:
-        const Matrix<T>* matrix;  // the matrix this iterator points to
-        int row, col;
-        bool is_last;
-        const_iterator (const Matrix<T>* matrix, int row, int col, bool is_last = false);
-        friend class Matrix<T>;  // allow IntMatrix to call the c'tor
-
-       public:
-        const_iterator& operator= (const const_iterator& it) = default;  // TODO test it!!
-        const_iterator (const const_iterator& it) = default;             // TODO test it!!
-
-        const T& operator*() const;
-        const_iterator& operator++();
-        const_iterator operator++ (int);
-
-        bool operator== (const const_iterator& it) const;
-        bool operator!= (const const_iterator& it) const;
-    };
-
-    template<typename T>
-    Matrix<T>::const_iterator::const_iterator (const Matrix<T>* matrix, int row, int col, bool is_last)
-        : matrix (matrix), row (row), col (col), is_last (is_last) {}
-
-    template<typename T>
-    typename Matrix<T>::const_iterator& Matrix<T>::const_iterator::operator++() {
-        if (col == matrix->width()) {
-            if (row != matrix->height()) {
-                col = 1;
-                row++;
-                return *this;
-            } else {
-                is_last = true;
-                return *this;
-            }
-        }
-        col++;
-        return *this;
-    }
-
-    template<typename T>
-    typename Matrix<T>::const_iterator Matrix<T>::const_iterator::operator++ (int) {
-        const_iterator result = *this;
-        ++*this;
-        return result;
-    }
-
-    template<typename T>
-    bool Matrix<T>::const_iterator::operator== (const const_iterator& it) const {
-        return (row == it.row && col == it.col && is_last == it.is_last);
-    }
-
-    template<typename T>
-    bool Matrix<T>::const_iterator::operator!= (const const_iterator& it) const {
-        return !(*this == it);
-    }
-
-    template<typename T>
     const typename Matrix<T>::const_iterator Matrix<T>::begin() const {
         return const_iterator (this, 1, 1, false);
     }
@@ -482,45 +429,34 @@ namespace mtm {
         return const_iterator (this, height(), width(), true);
     }
 
-    template<typename T>
-    const T& Matrix<T>::const_iterator::operator*() const {
-        if (is_last || matrix->height() <= row - 1 || matrix->width() <= col - 1) {
-            throw typename Matrix<T>::AccessIllegalElement();  // TODO
-        }
-        return matrix->matrix[row - 1][col - 1];
-    }
-
     /*
-    // TODO ךבדוק אם אפשר לסדר את זה שיעבוד
-
         template<class T>
-        class Matrix<T>::T_iterator {
-           public:
+        class Matrix<T>::iterator {
+           private:
             const Matrix<T>* matrix;  // the matrix this iterator points to
             int row, col;
             bool is_last;
-            T_iterator (const Matrix<T>* matrix, int row, int col, bool is_last = false);
+            iterator (const Matrix<T>* matrix, int row, int col, bool is_last = false);
             friend class Matrix<T>;  // allow IntMatrix to call the c'tor
 
-           //public:
-            T_iterator& operator= (const T_iterator& it) = default;  // TODO test it!!
-            T_iterator (const T_iterator& it) = default;             // TODO test it!!
+           public:
+            iterator& operator= (const iterator& it) = default;  // TODO test it!!
+            iterator (const iterator& it) = default;             // TODO test it!!
 
             T& operator*() const;
-            T_iterator& operator++();
-            T_iterator operator++ (int);
+            iterator& operator++();
+            iterator operator++ (int);
 
-            bool operator== (const T_iterator& it) const;
-            bool operator!= (const T_iterator& it) const;
+            bool operator== (const iterator& it) const;
+            bool operator!= (const iterator& it) const;
         };
 
-
         template<typename T>
-        Matrix<T>::T_iterator::T_iterator (const Matrix<T>* matrix, int row, int col, bool is_last)
+        Matrix<T>::iterator::iterator (const Matrix<T>* matrix, int row, int col, bool is_last)
             : matrix (matrix), row (row), col (col), is_last (is_last) {}
 
         template<typename T>
-        typename Matrix<T>::T_iterator& Matrix<T>::T_iterator::operator++() {
+        typename Matrix<T>::iterator& Matrix<T>::iterator::operator++() {
             if (col == matrix->width()) {
                 if (row != matrix->height()) {
                     col = 1;
@@ -536,37 +472,21 @@ namespace mtm {
         }
 
         template<typename T>
-        typename Matrix<T>::T_iterator Matrix<T>::T_iterator::operator++ (int) {
-            T_iterator result = *this;
+        typename Matrix<T>::iterator Matrix<T>::iterator::operator++ (int) {
+            iterator result = *this;
             ++*this;
             return result;
         }
 
         template<typename T>
-        bool Matrix<T>::T_iterator::operator== (const T_iterator& it) const {
+        bool Matrix<T>::iterator::operator== (const iterator& it) const {
             return (row == it.row && col == it.col && is_last == it.is_last);
         }
 
         template<typename T>
-        bool Matrix<T>::T_iterator::operator!= (const T_iterator& it) const {
+        bool Matrix<T>::iterator::operator!= (const iterator& it) const {
             return !(*this == it);
         }
-
-
-        template<class T>
-        class mtm::Matrix<T>::iterator : public Matrix<T>::T_iterator {
-           private:
-            iterator (const Matrix<T>* matrix, int row, int col, bool is_last = false);
-            friend class Matrix<T>;  // allow IntMatrix to call the c'tor
-           public:
-            T& operator*() const;
-
-        };
-
-
-        template<typename T>
-        Matrix<T>::iterator::iterator (const Matrix<T>* matrix, int row, int col, bool is_last)
-            : T_iterator(matrix,row,col,is_last) {}
 
         template<typename T>
         typename Matrix<T>::iterator Matrix<T>::begin() {
@@ -580,26 +500,70 @@ namespace mtm {
 
         template<typename T>
         T& Matrix<T>::iterator::operator*() const {
-            if ( is_last|| matrix->height() <= row - 1 || matrix->width() <= col - 1) {  // TODO
+            if (is_last || matrix->height() <= row - 1 || matrix->width() <= col - 1) {  // TODO
                 throw typename Matrix<T>::AccessIllegalElement();
             }
             return matrix->matrix[row - 1][col - 1];
         }
-    //iterator
+        // end-iterator
 
         template<class T>
         class mtm::Matrix<T>::const_iterator {
            private:
+            const Matrix<T>* matrix;  // the matrix this iterator points to
+            int row, col;
+            bool is_last;
             const_iterator (const Matrix<T>* matrix, int row, int col, bool is_last = false);
             friend class Matrix<T>;  // allow IntMatrix to call the c'tor
-           public:
-            const T& operator*() const;
 
+           public:
+            const_iterator& operator= (const const_iterator& it) = default;  // TODO test it!!
+            const_iterator (const const_iterator& it) = default;             // TODO test it!!
+
+            const T& operator*() const;
+            const_iterator& operator++();
+            const_iterator operator++ (int);
+
+            bool operator== (const const_iterator& it) const;
+            bool operator!= (const const_iterator& it) const;
         };
 
         template<typename T>
         Matrix<T>::const_iterator::const_iterator (const Matrix<T>* matrix, int row, int col, bool is_last)
-            : T_iterator(matrix,row,col,is_last) {}
+            : matrix (matrix), row (row), col (col), is_last (is_last) {}
+
+        template<typename T>
+        typename Matrix<T>::const_iterator& Matrix<T>::const_iterator::operator++() {
+            if (col == matrix->width()) {
+                if (row != matrix->height()) {
+                    col = 1;
+                    row++;
+                    return *this;
+                } else {
+                    is_last = true;
+                    return *this;
+                }
+            }
+            col++;
+            return *this;
+        }
+
+        template<typename T>
+        typename Matrix<T>::const_iterator Matrix<T>::const_iterator::operator++ (int) {
+            const_iterator result = *this;
+            ++*this;
+            return result;
+        }
+
+        template<typename T>
+        bool Matrix<T>::const_iterator::operator== (const const_iterator& it) const {
+            return (row == it.row && col == it.col && is_last == it.is_last);
+        }
+
+        template<typename T>
+        bool Matrix<T>::const_iterator::operator!= (const const_iterator& it) const {
+            return !(*this == it);
+        }
 
         template<typename T>
         const typename Matrix<T>::const_iterator Matrix<T>::begin() const {
@@ -614,11 +578,140 @@ namespace mtm {
         template<typename T>
         const T& Matrix<T>::const_iterator::operator*() const {
             if (is_last || matrix->height() <= row - 1 || matrix->width() <= col - 1) {
-                throw typename Matrix<T>::AccessIllegalElement(); //TODO
+                throw typename Matrix<T>::AccessIllegalElement();  // TODO
             }
             return matrix->matrix[row - 1][col - 1];
         }
-    */
+
+        /*
+        // TODO ךבדוק אם אפשר לסדר את זה שיעבוד
+
+            template<class T>
+            class Matrix<T>::T_iterator {
+               public:
+                const Matrix<T>* matrix;  // the matrix this iterator points to
+                int row, col;
+                bool is_last;
+                T_iterator (const Matrix<T>* matrix, int row, int col, bool is_last = false);
+                friend class Matrix<T>;  // allow IntMatrix to call the c'tor
+
+               //public:
+                T_iterator& operator= (const T_iterator& it) = default;  // TODO test it!!
+                T_iterator (const T_iterator& it) = default;             // TODO test it!!
+
+                T& operator*() const;
+                T_iterator& operator++();
+                T_iterator operator++ (int);
+
+                bool operator== (const T_iterator& it) const;
+                bool operator!= (const T_iterator& it) const;
+            };
+
+
+            template<typename T>
+            Matrix<T>::T_iterator::T_iterator (const Matrix<T>* matrix, int row, int col, bool is_last)
+                : matrix (matrix), row (row), col (col), is_last (is_last) {}
+
+            template<typename T>
+            typename Matrix<T>::T_iterator& Matrix<T>::T_iterator::operator++() {
+                if (col == matrix->width()) {
+                    if (row != matrix->height()) {
+                        col = 1;
+                        row++;
+                        return *this;
+                    } else {
+                        is_last = true;
+                        return *this;
+                    }
+                }
+                col++;
+                return *this;
+            }
+
+            template<typename T>
+            typename Matrix<T>::T_iterator Matrix<T>::T_iterator::operator++ (int) {
+                T_iterator result = *this;
+                ++*this;
+                return result;
+            }
+
+            template<typename T>
+            bool Matrix<T>::T_iterator::operator== (const T_iterator& it) const {
+                return (row == it.row && col == it.col && is_last == it.is_last);
+            }
+
+            template<typename T>
+            bool Matrix<T>::T_iterator::operator!= (const T_iterator& it) const {
+                return !(*this == it);
+            }
+
+
+            template<class T>
+            class mtm::Matrix<T>::iterator : public Matrix<T>::T_iterator {
+               private:
+                iterator (const Matrix<T>* matrix, int row, int col, bool is_last = false);
+                friend class Matrix<T>;  // allow IntMatrix to call the c'tor
+               public:
+                T& operator*() const;
+
+            };
+
+
+            template<typename T>
+            Matrix<T>::iterator::iterator (const Matrix<T>* matrix, int row, int col, bool is_last)
+                : T_iterator(matrix,row,col,is_last) {}
+
+            template<typename T>
+            typename Matrix<T>::iterator Matrix<T>::begin() {
+                return iterator (this, 1, 1, false);
+            }
+
+            template<typename T>
+            typename Matrix<T>::iterator Matrix<T>::end() {
+                return iterator (this, height(), width(), true);
+            }
+
+            template<typename T>
+            T& Matrix<T>::iterator::operator*() const {
+                if ( is_last|| matrix->height() <= row - 1 || matrix->width() <= col - 1) {  // TODO
+                    throw typename Matrix<T>::AccessIllegalElement();
+                }
+                return matrix->matrix[row - 1][col - 1];
+            }
+          //iterator
+
+            template<class T>
+            class mtm::Matrix<T>::const_iterator {
+               private:
+                const_iterator (const Matrix<T>* matrix, int row, int col, bool is_last = false);
+                friend class Matrix<T>;  // allow IntMatrix to call the c'tor
+               public:
+                const T& operator*() const;
+
+            };
+
+            template<typename T>
+            Matrix<T>::const_iterator::const_iterator (const Matrix<T>* matrix, int row, int col, bool is_last)
+                : T_iterator(matrix,row,col,is_last) {}
+
+            template<typename T>
+            const typename Matrix<T>::const_iterator Matrix<T>::begin() const {
+                return const_iterator (this, 1, 1, false);
+            }
+
+            template<typename T>
+            const typename Matrix<T>::const_iterator Matrix<T>::end() const {
+                return const_iterator (this, height(), width(), true);
+            }
+
+            template<typename T>
+            const T& Matrix<T>::const_iterator::operator*() const {
+                if (is_last || matrix->height() <= row - 1 || matrix->width() <= col - 1) {
+                    throw typename Matrix<T>::AccessIllegalElement(); //TODO
+                }
+                return matrix->matrix[row - 1][col - 1];
+            }
+        */
 }  // namespace mtm
 
 #endif  // EX3_MATRIX_H
