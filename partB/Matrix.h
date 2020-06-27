@@ -16,14 +16,14 @@ namespace mtm {
 
     template<typename T>
     class Matrix {
-       private:
+        private:
         T** matrix;
         mtm::Dimensions dimension;
         void allocate_space();
         template<typename PT>  // PT = pointer_type
         class T_iterator;
 
-       public:
+        public:
         Matrix() = delete;
         Matrix (Dimensions dim, const T& initial_val = T());
         Matrix (const Matrix& m);
@@ -72,25 +72,26 @@ namespace mtm {
     // Exceptions
     template<typename T>
     class Matrix<T>::AccessIllegalElement {
-       public:
+        public:
         const std::string what() const {
             return "Mtm matrix error: An attempt to access an illegal element";
         }
     };
     template<typename T>
     class Matrix<T>::IllegalInitialization {
-       public:
+        public:
         const std::string what() const {
             return "Mtm matrix error: Illegal initialization values";
         }
     };
     template<typename T>
     class Matrix<T>::DimensionMismatch {
-       public:
         Dimensions dimension1, dimension2;
+
+        public:
         DimensionMismatch (Dimensions dim1, Dimensions dim2) : dimension1 (dim1), dimension2 (dim2) {}
         const std::string what() const {
-            return "Mtm matrix error: Dimensionmismatch: " + dimension1.toString() + dimension2.toString();
+            return "Mtm matrix error: Dimension mismatch: " + dimension1.toString() + " " + dimension2.toString();
         }
     };
 
@@ -176,7 +177,7 @@ namespace mtm {
                     delete[] tmp_data[j];
                 }
                 delete[] tmp_data;
-                throw ;
+                throw;
             }
         }
         matrix = tmp_data;
@@ -234,7 +235,7 @@ namespace mtm {
     Matrix<T> Matrix<T>::operator-() const {
         Matrix<T> tmp (*this);
         for (typename Matrix<T>::iterator it = tmp.begin(); it != tmp.end(); ++it) {
-            *it *= -1;
+            (*it) *= -1;
         }
         return tmp;
     }
@@ -244,12 +245,12 @@ namespace mtm {
         if (m1.height() != m2.height() || m1.width() != m2.width()) {
             Dimensions dim1 (m1.height(), m1.width());
             Dimensions dim2 (m2.height(), m2.width());
-            typename Matrix<T>::DimensionMismatch res (dim1, dim2);
-            throw res;
+            //   typename Matrix<T>::DimensionMismatch res (dim1, dim2);
+            throw typename Matrix<T>::DimensionMismatch (dim1, dim2);
         }
         Matrix<T> tmp (m1);
         typename Matrix<T>::const_iterator it1 = m1.begin(), it2 = m2.begin();
-        for (typename Matrix<T>::iterator it = tmp.begin(); it != tmp.end(); ++it) {
+        for (typename Matrix<T>::iterator it = tmp.begin(); it != tmp.end(); ++it, ++it2, ++it1) {
             *it = *it1 + *it2;
         }
         return tmp;
@@ -277,8 +278,12 @@ namespace mtm {
     }
 
     template<typename T>
-    Matrix<T> operator+ (const T& t, const Matrix<T>& m2) {
-        return m2 + t;
+    Matrix<T> operator+ (const T& t, const Matrix<T>& m) {
+        Matrix<T> tmp (m);
+        for (typename Matrix<T>::iterator it = tmp.begin(); it != tmp.end(); ++it) {
+            *it = t + *it;
+        }
+        return tmp;
     }
 
     template<typename T>
@@ -362,7 +367,7 @@ namespace mtm {
     template<typename T>
     template<typename PT>  // PT = pointer_type
     class Matrix<T>::T_iterator {
-       private:
+        private:
         const Matrix<T>* matrix;  // the matrix this iterator points to
         int row, col;
         bool is_last;
@@ -370,7 +375,7 @@ namespace mtm {
             : matrix (matrix), row (row), col (col), is_last (is_last) {}
         friend class Matrix<T>;  // allow IntMatrix to call the c'tor
 
-       public:
+        public:
         T_iterator& operator= (const T_iterator& it) = default;  // TODO test it!!
         T_iterator (const T_iterator& it) = default;             // TODO test it!!
 
@@ -395,10 +400,10 @@ namespace mtm {
             return *this;
         }
         T_iterator operator++ (int) {
-            return ++*this;  // TODO test it
-            // T_iterator result = *this;
-            //++*this;
-            // return result;
+            // return *this++;  // TODO test it
+            T_iterator result = *this;
+            ++*this;
+            return result;
         }
 
         bool operator== (const T_iterator& it) const {

@@ -59,6 +59,8 @@ int main() {
 
         std::cout << " mat_1\n" << mat_1 << std::endl;
         std::cout << "mat_2 \n" << mat_2 << std::endl;
+        mtm::Matrix<int> mat_5 = -mat_2;
+        std::cout << "mat_5 \n" << mat_5<< std::endl;
         std::cout << mat_2 (1, 2) << std::endl;
         mtm::Matrix<int>::const_iterator it = mat_2.end();
         std::cout << *it;
