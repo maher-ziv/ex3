@@ -111,7 +111,7 @@ bool findDependencies(ostream& os){
     DependencyFinder::reset();
     Matrix<DependencyFinder> matrix1(Dimensions(3,3));
     Matrix<DependencyFinder> matrix2(Dimensions(3,3), DependencyFinder());
-    std::cout << matrix2 <<endl;
+    //std::cout << matrix2 <<endl;
      Matrix<DependencyFinder> tmp( matrix2 );
     printCurrentDependency(os, "Constructor");
 
@@ -991,7 +991,7 @@ bool run_test(std::function<bool()> test, std::string test_name){
     return true;
 }
 int main(){
-
+    std::cout << "\t-----------partB_tester2----------\n";
     createSampleData();
 
     std::map<std::string, std::function<bool()>> tests;

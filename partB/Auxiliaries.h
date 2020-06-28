@@ -10,9 +10,6 @@ namespace mtm {
 	enum Team { CPP, PYTHON };
 	enum CharacterType { SOLDIER, MEDIC, SNIPER };
 	typedef int units_t;
-	
-				
-	class Exception : public std::exception {};
 
 	struct GridPoint {
 		int row, col;

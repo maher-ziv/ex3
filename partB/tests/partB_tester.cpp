@@ -8,6 +8,7 @@
 #include <iterator>
 #include <string>
 #include <fstream>
+#include <vector>
 
 #include "../Matrix.h"
 
@@ -128,13 +129,13 @@ bool findDependencies(ostream& os){
     matrix1.transpose();
     printCurrentDependency(os, "Transpose");
 
-    DependencyFinder::reset();
-    -matrix1;
-    printCurrentDependency(os, "Unary -");
+    // DependencyFinder::reset();
+    // -matrix1;
+    // printCurrentDependency(os, "Unary -");
 
-    DependencyFinder::reset();
-    matrix2-matrix1;
-    printCurrentDependency(os, "Binary -");
+    // DependencyFinder::reset();
+    // matrix2-matrix1;
+    // printCurrentDependency(os, "Binary -");
 
     DependencyFinder::reset();
     matrix2+matrix1;
@@ -181,9 +182,9 @@ bool findDependencies(ostream& os){
     all(matrix1);
     printCurrentDependency(os, "All");
 
-    DependencyFinder::reset();
-    matrix1.apply(fnc);
-    printCurrentDependency(os, "Apply");
+    // DependencyFinder::reset();
+    // matrix1.apply(fnc);
+    // printCurrentDependency(os, "Apply");
 
     return true;
 
@@ -551,6 +552,7 @@ bool testOperatorNegative(){
         // Tests that DimensionMismatch extends std::exception
         std::exception e_test = e;
         ASSERT_TEST(string(e.what()) == "Mtm matrix error: Dimension mismatch: (18,5) (17,5)");
+        
     }
 
     return true;

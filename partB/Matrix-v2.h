@@ -5,7 +5,6 @@
 #include <string>
 
 #include "Auxiliaries.h"
-
 namespace mtm {
     template<typename T>
     class Array;

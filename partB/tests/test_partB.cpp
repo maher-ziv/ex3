@@ -2,9 +2,9 @@
 #include <string>
 
 #include "../Matrix.h"
-
+#include <assert.h>
 class Square {
-   public:
+    public:
     int operator() (int val) {
         return val * val;
     }
@@ -60,12 +60,21 @@ int main() {
         std::cout << " mat_1\n" << mat_1 << std::endl;
         std::cout << "mat_2 \n" << mat_2 << std::endl;
         mtm::Matrix<int> mat_5 = -mat_2;
-        std::cout << "mat_5 \n" << mat_5<< std::endl;
+        std::cout << "mat_5 \n" << mat_5 << std::endl;
         std::cout << mat_2 (1, 2) << std::endl;
         mtm::Matrix<int>::const_iterator it = mat_2.end();
         std::cout << *it;
     } catch (mtm::Matrix<int>::AccessIllegalElement& e) {
         std::cout << e.what() << std::endl;
+    }
+
+    try {
+        mtm::Matrix<int> mat_11 (dim_1);
+        mtm::Matrix<int> mat_12 (dim_3);
+        mtm::Matrix<int> mat_13 = mat_11 + mat_12;
+        assert (false);
+    } catch (mtm::Matrix<int>::DimensionMismatch e) {
+        assert ( std::string(e.what()) == "Mtm matrix error: Dimension mismatch: (2,3) (3,2)");
     }
 
     // std::cout << "\n end test" << std::endl;

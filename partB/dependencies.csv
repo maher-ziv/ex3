@@ -1,8 +1,8 @@
 Searching for dependencies:
 Function,!=,+,+=,<,<<,<=,=,==,>,>=,bin -,bool,cctor,ctor,dtor,uni -,
-Constructor, , , , ,1, ,1, , , , , ,1,1,1, ,
+Constructor, , , , , , ,1, , , , , , ,1,1, ,
 Copy Constructor, , , , , , ,1, , , , , , ,1, , ,
-Assignment Operator, , , , , , ,1, , , , , , ,1, , ,
+Assignment Operator, , , , , , ,1, , , , , , ,1,1, ,
 Diagonal, , , , , , ,1, , , , , , ,1,1, ,
 Transpose, , , , , , ,1, , , , , , ,1,1, ,
 Binary +, ,1, , , , ,1, , , , , , ,1,1, ,
