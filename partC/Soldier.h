@@ -7,15 +7,18 @@
 #include <iostream>
 #include <memory>
 
-using mtm::GridPoint;
 using mtm::Character;
+using mtm::GridPoint;
 namespace mtm {
     class Soldier : public Character {
+
        public:
-        Soldier (int health, int ammo, int range, int power, GridPoint coordinate)
-            : Character (health, ammo, range, power, coordinate) {}
+        Soldier() = delete;
+        Soldier (int health, int ammo, int range, int power, Team team)
+            : Character (health, ammo, range, power, team) {}
+        Soldier (const Soldier& soldier);
         ~Soldier() override {}
-        Character* clone() const override;
+        std::shared_ptr<Character> clone() const override;
         void move();
         void attack();
         void relode();

@@ -7,22 +7,27 @@
 #include <memory>
 
 using mtm::GridPoint;
-
+   
 namespace mtm {
     class Character {
        private:
         int health, ammo, range, power;
-        GridPoint coordinate;
+        GridPoint coordinates;
+        Team team;
+        CharacterType type;
+        const GridPoint OUT_OF_GAME = {-1,-1};
 
        public:
-        Character (int health, int ammo, int range, int power, GridPoint coordinate);
-            
+        Character() = delete;
+        Character (int health, int ammo, int range, int power, Team team);
         virtual ~Character() {}
-        virtual Character* clone() const = 0;
-        virtual void move() = 0 ;
-        virtual void attack() = 0 ;
-        virtual void relode() = 0 ;
-
+        virtual std::shared_ptr<Character> clone() const = 0;
+        virtual void move() = 0;
+        virtual void attack() = 0;
+        virtual void relode() = 0;
+        void locate(const GridPoint& coor) {
+            coordinates = coor;
+        }
     };
 
 }  // namespace mtm

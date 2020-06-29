@@ -8,6 +8,62 @@
 #include <string>
 namespace mtm {
 
+    class Exception : public std::exception {};
+
+    class IllegalArgument : public Exception {
+       public:
+        const char* what() const noexcept override {
+            return "A gamerelated error has occurred: IllegalArgument";
+        }
+    };
+    class IllegalCell : public Exception {
+       public:
+        const char* what() const noexcept override {
+            return "A gamerelated error has occurred: IllegalCell";
+        }
+    };
+    class CellEmpty : public Exception {
+       public:
+        const char* what() const noexcept override {
+            return "A gamerelated error has occurred: CellEmpty";
+        }
+    };
+    class MoveTooFar : public Exception {
+       public:
+        const char* what() const noexcept override {
+            return "A gamerelated error has occurred: MoveTooFar";
+        }
+    };
+    class CellOccupied : public Exception {
+       public:
+        const char* what() const noexcept override {
+            return "A gamerelated error has occurred: CellOccupied";
+        }
+    };
+    class OutOfRange : public Exception {
+       public:
+        const char* what() const noexcept override {
+            return "A gamerelated error has occurred: OutOfRange";
+        }
+    };
+    class OutOfAmmo : public Exception {
+       public:
+        const char* what() const noexcept override {
+            return "A gamerelated error has occurred: OutOfAmmo";
+        }
+    };
+    class IllegalTarget : public Exception {
+       public:
+        const char* what() const noexcept override {
+            return "A gamerelated error has occurred: IllegalTarget";
+        }
+    };
+
+    class GameException : public Exception {};
+
+}  // namespace mtm
+
+/*
     class Exception : public std::exception {
        private:
         char* exception_class;
@@ -25,15 +81,5 @@ namespace mtm {
             return exception_class;
         }
     };
-
-    class IllegalArgument : public Exception {
-       public:
-        IllegalArgument() : Exception ("IllegalArgument") {}
-    };
-
-    class GameException : public Exception {
-    };
-    
-}  // namespace mtm
-
+*/
 #endif  // HW3_EXCEPTION_H
