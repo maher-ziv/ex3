@@ -19,8 +19,8 @@
 | |s| | |m| | | |
 | | | | | | | | |
 *****************
-A game related error has occured: IllegalTarget
-A game related error has occured: OutOfRange
+A game related error has occurred: IllegalTarget
+A game related error has occurred: OutOfRange
 *****************
 | | | | | | | | |
 | | |M| | | | | |
@@ -31,7 +31,7 @@ A game related error has occured: OutOfRange
 | |s| | |m| | | |
 | | | | | | | | |
 *****************
-A game related error has occured: CellEmpty
+A game related error has occurred: CellEmpty
 *****************
 | | | | | | | | |
 | | |M| | | | | |
@@ -42,7 +42,7 @@ A game related error has occured: CellEmpty
 | | | | |m| | | |
 | | | | | | | | |
 *****************
-A game related error has occured: OutOfRange
+A game related error has occurred: OutOfRange
 *****************
 | | | | | | | | |
 | | |M| | | | | |
@@ -63,9 +63,9 @@ A game related error has occured: OutOfRange
 | | | | |m| | | |
 | | | | | | | | |
 *****************
-A game related error has occured: CellEmpty
-A game related error has occured: OutOfAmmo
-A game related error has occured: IllegalTarget
+A game related error has occurred: CellEmpty
+A game related error has occurred: OutOfAmmo
+A game related error has occurred: IllegalTarget
 isOver: 0
 is cpp the winning team? 0
 *****************
@@ -78,7 +78,7 @@ is cpp the winning team? 0
 | | | | | | | | |
 | | | | | | | | |
 *****************
-A game related error has occured: CellEmpty
+A game related error has occurred: CellEmpty
 isOver: 1
 is cpp the winning team? 1
 ------example 2------
@@ -89,8 +89,8 @@ is cpp the winning team? 1
 |S| | | | | |m| |n| |
 | | | | | | |m| | | |
 *********************
-A game related error has occured: OutOfRange
-A game related error has occured: MoveTooFar
+A game related error has occurred: OutOfRange
+A game related error has occurred: MoveTooFar
 *********************
 | | | | | | | | | | |
 | | | | | | | | | | |
@@ -112,10 +112,10 @@ A game related error has occured: MoveTooFar
 |S| | | | | |m| |n| |
 | | | | | | |m| | | |
 *********************
-A game related error has occured: OutOfAmmo
-A game related error has occured: CellEmpty
-A game related error has occured: IllegalCell
-A game related error has occured: IllegalCell
+A game related error has occurred: OutOfAmmo
+A game related error has occurred: CellEmpty
+A game related error has occurred: IllegalCell
+A game related error has occurred: IllegalCell
 *********************
 | | | | | | | | | | |
 | | | | | | | | | | |
@@ -137,7 +137,8 @@ A game related error has occured: IllegalCell
 | | | |S| | | | |n| |
 | | | | | | |m| | | |
 *********************
-A game related error has occured: OutOfAmmo
+A game related error has occurred: IllegalTarget
+A game related error has occurred: OutOfAmmo
 *********************
 | | | | | | | | | | |
 | | | | | | | | | | |

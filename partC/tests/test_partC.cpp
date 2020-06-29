@@ -3,6 +3,7 @@
 
 #include <cassert>
 
+#include "Exceptions.h"
 #include "Game.h"
 
 using namespace mtm;
@@ -29,13 +30,13 @@ void example1() {
 	
 	try {
 		g1.attack(GridPoint(1,4), GridPoint(1,2)); // can't attak ally
-	} catch (mtm::Game::IllegalTarget& e) {
+	} catch (const mtm::IllegalTarget& e) {
 		std::cout << e.what() << std::endl;
 	}
 	
 	try {
 		g1.attack(GridPoint(1,4), GridPoint(6,1)); // should not work - not in range
-	} catch (mtm::Game::OutOfRange& e) {
+	} catch (const mtm::OutOfRange& e) {
 		std::cout << e.what() << std::endl;
 	}
 	
@@ -43,7 +44,7 @@ void example1() {
 	std::cout << g1 << std::endl;
 	try {
 		g1.attack(GridPoint(1,4), GridPoint(6,4)); // character moved away
-	} catch (mtm::Game::CellEmpty& e) {
+	} catch (const mtm::CellEmpty& e) {
 		std::cout << e.what() << std::endl;
 		}
 
@@ -54,7 +55,7 @@ void example1() {
 	
 	try {
 		g1.attack(GridPoint(3,2), GridPoint(4,2)); // sniper can't attack close targets
-	} catch (mtm::Game::OutOfRange& e) {
+	} catch (const mtm::OutOfRange& e) {
 		std::cout << e.what() << std::endl;
 	}
 	
@@ -66,7 +67,7 @@ void example1() {
 	
 	try {
 		g1.move(GridPoint(6,2), GridPoint(6,1)); // soldier was killed and removed
-	} catch (mtm::Game::CellEmpty& e) {
+	} catch (const mtm::CellEmpty& e) {
 		std::cout << e.what() << std::endl;
 	}
 	
@@ -74,14 +75,14 @@ void example1() {
 	
 	try {
 		g1.attack(GridPoint(3,4), GridPoint(6,4)); // sniper out of ammo
-	} catch (mtm::Game::OutOfAmmo& e) {
+	} catch (const mtm::OutOfAmmo& e) {
 		std::cout << e.what() << std::endl;
 	}
 	
 		
 	try {
 		g1.attack(GridPoint(6,4), GridPoint(6,4)); // medic can't heal itself
-	} catch (mtm::Game::IllegalTarget& e) {
+	} catch (const mtm::IllegalTarget& e) {
 		std::cout << e.what() << std::endl;
 	}
 
@@ -98,7 +99,7 @@ void example1() {
 	try {
 		g1.move(GridPoint(6,4), GridPoint(6,1)); // medic was killed and removed
 												// the kill was possible because of the sniper double power third attack
-	} catch (mtm::Game::CellEmpty& e) {
+	} catch (const mtm::CellEmpty& e) {
 		std::cout << e.what() << std::endl;
 	}
 	
@@ -118,13 +119,13 @@ void example2() {
 	
 	try {
 		g1.attack(GridPoint(3,0), GridPoint(3,6));
-	} catch (mtm::Game::OutOfRange& e) {
+	} catch (const mtm::OutOfRange& e) {
 		std::cout << e.what() << std::endl;
 	}
 	
 	try {
 		g1.move(GridPoint(3,0), GridPoint(3,4)); // soldier only moves 3 at a time
-	} catch (mtm::Game::MoveTooFar& e) {
+	} catch (const mtm::MoveTooFar& e) {
 		std::cout << e.what() << std::endl;
 	}
 	
@@ -139,24 +140,24 @@ void example2() {
 	
 	try {
 		g1.attack(GridPoint(3,3), GridPoint(3,6)); // soldier has 0 ammo
-	} catch (mtm::Game::OutOfAmmo& e) {
+	} catch (const mtm::OutOfAmmo& e) {
 		std::cout << e.what() << std::endl;
 	}
 	
 	try {
 		g1.reload(GridPoint(3,2));
-	} catch (mtm::Game::CellEmpty& e) {
+	} catch (const mtm::CellEmpty& e) {
 		std::cout << e.what() << std::endl;
 	}
 	
 	try {
 		g1.reload(GridPoint(3,-3));
-	} catch (mtm::Game::IllegalCell& e) {
+	} catch (const mtm::IllegalCell& e) {
 		std::cout << e.what() << std::endl;
 	}
 	try {
 		g1.reload(GridPoint(3,13));
-	} catch (mtm::Game::IllegalCell& e) {
+	} catch (const mtm::IllegalCell& e) {
 		std::cout << e.what() << std::endl;
 	}
 	
@@ -173,14 +174,14 @@ void example2() {
 	
 	g1.attack(GridPoint(4,6), GridPoint(2,6)); // medic heals sniper
 	try {
-		g1.attack(GridPoint(4,6), GridPoint(2,6)); // medic can't heal self
-	} catch (mtm::Game::IllegalTarget& e) {
+		g1.attack(GridPoint(4,6), GridPoint(4,6)); // medic can't heal self
+	} catch (const mtm::IllegalTarget& e) {
 		std::cout << e.what() << std::endl;
 	}
 	
 	try {
 		g1.attack(GridPoint(3,3), GridPoint(3,6)); // soldier out of ammo
-	} catch (mtm::Game::OutOfAmmo& e) {
+	} catch (const mtm::OutOfAmmo& e) {
 		std::cout << e.what() << std::endl;
 	}
 	
