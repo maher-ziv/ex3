@@ -27,10 +27,11 @@ void Medic::attack (vector<vector<shared_ptr<Character>>>& board, const GridPoin
         board.at (dst_coordinates.row).at (dst_coordinates.col)->health_add(power);
     } 
     else {
-        if (ammo-- <= 0) {
+        if (ammo == 0) {
             throw OutOfAmmo();
         }
          board.at (dst_coordinates.row).at (dst_coordinates.col)->health_add(-power);
+         ammo--;
     }
  
 }

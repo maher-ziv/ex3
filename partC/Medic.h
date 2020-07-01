@@ -27,9 +27,7 @@ namespace mtm {
                              const GridPoint& dst_coordinates) override;
         void relode() override{ammo+=BULLETS;}
         int max_steps() override{return MAX_STEPS;}
-        char letter() override {
-            return team == CPP ? 'M' : 'm';
-        }
+        char letter() override {return 'M';}
     };
 }  // namespace mtm
 

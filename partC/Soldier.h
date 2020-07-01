@@ -19,7 +19,7 @@ namespace mtm {
 
         public:
         Soldier() = delete;
-        Soldier (int health, int ammo, int range, int power, Team team)
+        Soldier (int health, int ammo, int range, int power, Team team )
             : Character (health, ammo, range, power, team) {}
         Soldier (const Soldier& soldier) = default;
         ~Soldier() override {}
@@ -29,10 +29,10 @@ namespace mtm {
 
         void relode() override{ammo+=BULLETS;}
         int max_steps() override{return MAX_STEPS;}
-        char letter() override {
-            return team == CPP ? 'S' : 's';
-        }
+        char letter() override {return 'S';}
+           
     };
+    
 }  // namespace mtm
 
 #endif  // HW3_SOLDIER_H
