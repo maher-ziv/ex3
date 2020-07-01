@@ -1,0 +1,3 @@
+C:/Users/zivst/mtm/dry1/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+C:/Users/zivst/mtm/dry1/cmake-build-debug/CMakeFiles/dry1.dir
+C:/Users/zivst/mtm/dry1/cmake-build-debug/CMakeFiles/edit_cache.dir
