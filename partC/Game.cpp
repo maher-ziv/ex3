@@ -1,17 +1,44 @@
 #include "Game.h"
 
+#include <array>
+
 #include "Medic.h"
 #include "Sniper.h"
 #include "Soldier.h"
-#include <array>
 using namespace mtm;
-using std::vector;
 using std::array;
+using std::vector;
 
-Game::Game (int height, int width) : height (height), width (width), board (height, vector<pCharacter> (width)) ,out(nullptr) {
+Game::Game (int height, int width)
+    : height (height), width (width), board (height, vector<pCharacter> (width)), out (nullptr) {
     if (height <= 0 || width <= 0) {
         throw IllegalArgument();
     }
+}
+
+Game::Game (const Game &other)
+    : height (other.height),
+      width (other.width),
+      board (other.height, vector<pCharacter> (other.width)),
+      out (nullptr) {
+
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            board.at (i).at (j) = other.board.at (i).at (j)->clone();
+        }
+    }
+}
+
+Game &Game::operator= (const Game &other) {
+    Game tmp (other);
+    for (int i = 0; i < other.height; i++) {
+        for (int j = 0; j < other.width; j++) {
+            tmp.board.at (i).at (j) = other.board.at (i).at (j)->clone();
+        }
+    }
+    board = tmp.board;  // TODO לבדוק שזה מעתיק כמו שצריך
+    height = other.height;
+    width = other.width;
 }
 
 static shared_ptr<Character> makeCharacter (CharacterType type, Team team, units_t health, units_t ammo, units_t range,
@@ -80,8 +107,21 @@ void Game::reload (const GridPoint &coordinates) {
     if (!board.at (coordinates.row).at (coordinates.col)) {
         throw CellEmpty();  // TODO לבדןק שישי null
     }
-    board.at(coordinates.row).at(coordinates.col)->relode();
+    board.at (coordinates.row).at (coordinates.col)->relode();
 }
 
-
-
+bool Game::isOver (Team *winningTeam = NULL) const {
+    bool cpp = false, python = false;
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            if (board.at (i).at (j)) {
+                board.at (i).at (j)->team == CPP ? cpp = true : python = true;
+                if (cpp && python)
+                    return false; 
+            }
+        }
+    }
+    if (!cpp && !python) return false;
+    *winningTeam =( winningTeam != nullptr) ? (cpp ? CPP : PYTHON) : *winningTeam;
+    return true;
+}

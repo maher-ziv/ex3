@@ -127,7 +127,7 @@ namespace mtm {
     /*
      *allocate_and_copy - allocate space for new matrix of type T
      *                    and copy the element of source matrix to
-     *                    the new  matrix (destination)
+     *                    the new matrix (destination)
      */
     template<typename T>
     T** Matrix<T>::allocate_and_copy (T** src, int row_size, int col_size) {
@@ -148,9 +148,9 @@ namespace mtm {
         return dis;
     }
     /**
-     *  @brief  Creates a matrix with default constructed elements.
+     *  @brief  Creates a matrix with a default constructed elements.
      *  @param  dim  The dimension of elements to initially create.
-     *  @param  initial_val initial valu of elements to initially create.
+     *  @param  initial_val initial value of elements to initially create.
      *
      *  This constructor fills the %matrix with @T default
      *  constructed elements.
@@ -218,41 +218,6 @@ namespace mtm {
         dimension = m.dimension;
         return *this;
     }
-
-    // template<typename T>
-    // Matrix<T>& Matrix<T>::operator= (const Matrix<T>& m) {
-    //     if (this == &m) {
-    //         return *this;
-    //     }
-    //     T** tmp_data = new T*[m.height()];
-    //     for (int i = 0; i < m.height(); i++) {
-    //         try {
-    //             tmp_data[i] = new T[m.width()];
-    //             for (int j = 0; j < m.width(); j++) {
-    //                 tmp_data[i][j] = m.matrix[i][j];
-    //             }
-    //         } catch (const std::bad_alloc& e) {  // TODO check if need to catch another throw
-    //             for (int j = 0; j < i; j++) {
-    //                 delete[] tmp_data[j];
-    //             }
-    //             delete[] tmp_data;
-    //             throw e;
-    //         } catch (...) {
-    //             for (int j = 0; j < i; j++) {
-    //                 delete[] tmp_data[j];
-    //             }
-    //             delete[] tmp_data;
-    //             throw;
-    //         }
-    //     }
-    //     for (int i = 0; i < height(); i++) {  // TODO
-    //         delete[] matrix[i];
-    //     }
-    //     delete[] matrix;
-    //     matrix = tmp_data;
-    //     dimension = m.dimension;
-    //     return *this;
-    // }
 
     /**
      *  @brief  Diagonal %Matrix constructor.

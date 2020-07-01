@@ -5,7 +5,7 @@ using std::shared_ptr;
 using std::vector;
 
 std::shared_ptr<Character> Medic::clone() const {
-    return std::shared_ptr<Character> (new Medic (*this));
+    return std::shared_ptr<Character> (new Medic (*this)); 
 }
 
 void Medic::attack (vector<vector<shared_ptr<Character>>>& board, const GridPoint& src_coordinates,

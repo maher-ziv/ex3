@@ -6,8 +6,8 @@
 #include <iterator>
 #include <string>
 
-#include "../IntMatrix.h"
-#include "../Auxiliaries.h"
+#include "IntMatrix.h"
+#include "Auxiliaries.h"
 
 using namespace mtm;
 using std::cout;
@@ -262,23 +262,19 @@ bool testOperatorMatrixAddition(){
     for (int& element : mat){
         element = sampleData[i++];
     }
-    // std::cout << "mat \n"<<mat <<endl;
+    
     IntMatrix mat2 = -mat;
-   // std::cout << "mat \n"<<mat <<endl;
     ASSERT_TEST(mat2.height() == rows);
     ASSERT_TEST(mat2.width() == cols);
     ASSERT_TEST(mat2.size() == rows*cols);
+
     ASSERT_TEST(checkAreEqual((mat=mat+mat2), IntMatrix(Dimensions(rows,cols))));
     ASSERT_TEST(!checkAreEqual(mat+mat2, IntMatrix(Dimensions(rows,cols))));
     ASSERT_TEST(checkAreEqual((-mat2) + mat2, IntMatrix(Dimensions(rows,cols))));
-    
-    
+
     IntMatrix mat3 = mat2 + mat2;
-
     mat3 = mat3 + mat2;
-
     mat3 = mat3 - mat2;
-
     i = 0;
     for (int& element : mat3){
         ASSERT_TEST(element == -2*sampleData[i++]);

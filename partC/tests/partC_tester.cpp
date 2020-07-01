@@ -45,13 +45,13 @@ bool checkGameContainsPlayerAt(Game& game, GridPoint point){
     try{
         game.move(point, point);
     }
-    catch(CellOccupied&){
-        return true;
-    }
-    catch(...){
+    catch(CellEmpty&){
         return false;
     }
-    return false;
+    catch (GameException&){
+        return true;
+    }
+    return true;
 }
 
 bool testErrorNames(){
@@ -66,7 +66,7 @@ bool testErrorNames(){
     ASSERT_ERROR_WITH_MESSAGE(testGame.addCharacter(GridPoint(-1,-1), testCharacter1), IllegalCell, "A game related error has occurred: IllegalCell");
     ASSERT_ERROR_WITH_MESSAGE(testGame.move(GridPoint(0,0), GridPoint(0,0)), CellEmpty, "A game related error has occurred: CellEmpty");
     ASSERT_ERROR_WITH_MESSAGE(testGame.move(GridPoint(1,1), GridPoint(9,9)), MoveTooFar, "A game related error has occurred: MoveTooFar");
-    ASSERT_ERROR_WITH_MESSAGE(testGame.move(GridPoint(1,1), GridPoint(1,1)), CellOccupied, "A game related error has occurred: CellOccupied");
+    ASSERT_ERROR_WITH_MESSAGE(testGame.move(GridPoint(1,1), GridPoint(3,1)), CellOccupied, "A game related error has occurred: CellOccupied");
     ASSERT_ERROR_WITH_MESSAGE(testGame.attack(GridPoint(1,1), GridPoint(3,3)), OutOfRange, "A game related error has occurred: OutOfRange");
     ASSERT_ERROR_WITH_MESSAGE(testGame.attack(GridPoint(1,1), GridPoint(1,2)), OutOfAmmo, "A game related error has occurred: OutOfAmmo");
     ASSERT_ERROR_WITH_MESSAGE(testGame.attack(GridPoint(3,1), GridPoint(3,1)), IllegalTarget, "A game related error has occurred: IllegalTarget");
@@ -207,7 +207,7 @@ bool testMove(){
 
     ASSERT_ERROR(game.move(GridPoint(0,0), GridPoint(5,5)), MoveTooFar);
 
-    ASSERT_ERROR(game.move(GridPoint(0,0), GridPoint(0,0)), CellOccupied);
+    //ASSERT_NO_ERROR(game.move(GridPoint(0,0), GridPoint(0,0)));
     ASSERT_ERROR(game.move(GridPoint(0,0), GridPoint(1,1)), CellOccupied);
     ASSERT_ERROR(game.move(GridPoint(1,1), GridPoint(0,0)), CellOccupied);
 
@@ -220,7 +220,10 @@ bool testMove(){
     GridPoint selected(9,9);
     for (int i = 0; i < rows; i++){
         for (int j = 0; j < cols; j++){
-            if (GridPoint::distance(GridPoint(i,j), selected) <= 3){
+            if (selected == GridPoint(i,j)){
+                //ASSERT_NO_ERROR(game.move(selected, GridPoint(i,j)));
+            }
+            else if (GridPoint::distance(GridPoint(i,j), selected) <= 3){
                 ASSERT_ERROR(game.move(selected, GridPoint(i,j)), CellOccupied);
             }
             else{
@@ -237,7 +240,10 @@ bool testMove(){
     }
     for (int i = 0; i < rows; i++){
         for (int j = 0; j < cols; j++){
-            if (GridPoint::distance(GridPoint(i,j), selected) <= 5){
+            if (selected == GridPoint(i,j)){
+                //ASSERT_NO_ERROR(game.move(selected, GridPoint(i,j)));
+            }
+            else if (GridPoint::distance(GridPoint(i,j), selected) <= 5){
                 ASSERT_ERROR(game.move(selected, GridPoint(i,j)), CellOccupied);
             }
             else{
@@ -254,7 +260,10 @@ bool testMove(){
     }
     for (int i = 0; i < rows; i++){
         for (int j = 0; j < cols; j++){
-            if (GridPoint::distance(GridPoint(i,j), selected) <= 4){
+            if (selected == GridPoint(i,j)){
+                //ASSERT_NO_ERROR(game.move(selected, GridPoint(i,j)));
+            }
+            else if (GridPoint::distance(GridPoint(i,j), selected) <= 4){
                 ASSERT_ERROR(game.move(selected, GridPoint(i,j)), CellOccupied);
             }
             else{
@@ -356,9 +365,22 @@ bool testAttackSoldier(){
     ASSERT_NO_ERROR(game.addCharacter(selected, Game::makeCharacter(SOLDIER, CPP, 1, 0, range, 0)));
     for (int i = 0; i < rows; i++){
         for (int j = 0; j < cols; j++){
+            // If attacking in range and in same row/col, then expect OutOfAmmo
             if (GridPoint::distance(GridPoint(i,j), selected) <= range && (i==selected.row || j==selected.col)){
                 ASSERT_ERROR(game.attack(selected, GridPoint(i,j)), OutOfAmmo);
             }
+            // If attacking in range but not in same row/col, then expect OutOfAmmo (since preceds IllegalTarget)
+            else if (GridPoint::distance(GridPoint(i,j), selected) <= range && (i!=selected.row && j!=selected.col)){
+                ASSERT_ERROR(game.attack(selected, GridPoint(i,j)), OutOfAmmo);
+                // However, if we reload the selected attacker then we expect IllegalTarget
+                ASSERT_NO_ERROR(game.reload(selected));
+                ASSERT_ERROR(game.attack(selected, GridPoint(i,j)), IllegalTarget);
+                // Waste the generated ammo (no affect to hp since all on same team)
+                ASSERT_NO_ERROR(game.attack(selected, selected));
+                ASSERT_NO_ERROR(game.attack(selected, selected));
+                ASSERT_NO_ERROR(game.attack(selected, selected));
+            }
+            // Else if attacking outside of range, then expect OutOfRange
             else{
                 ASSERT_ERROR(game.attack(selected, GridPoint(i,j)), OutOfRange);
             }
@@ -416,14 +438,14 @@ bool testAttackMedic(){
     game = Game(rows,cols);
     int range = 7;
     GridPoint selected(9,9);
-    ASSERT_NO_ERROR(game.addCharacter(selected, Game::makeCharacter(MEDIC, CPP, 1, 0, range, 0)));
+    ASSERT_NO_ERROR(game.addCharacter(selected, Game::makeCharacter(MEDIC, CPP, 1, rows * cols + 1, range, 0)));
     for (int i = 0; i < rows; i++){
         for (int j = 0; j < cols; j++){
             if (i == selected.row && j == selected.col){
                 continue;
             }
             if (GridPoint::distance(GridPoint(i,j), selected) <= range){
-                ASSERT_ERROR(game.attack(selected, GridPoint(i,j)), OutOfAmmo);
+                ASSERT_ERROR(game.attack(selected, GridPoint(i,j)), IllegalTarget);
             }
             else{
                 ASSERT_ERROR(game.attack(selected, GridPoint(i,j)), OutOfRange);

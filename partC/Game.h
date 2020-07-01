@@ -36,6 +36,7 @@ namespace mtm {
         void attack (const GridPoint& src_coordinates, const GridPoint& dst_coordinates);
         void reload (const GridPoint& coordinates);
         friend std::ostream& operator<< (std::ostream& os, const Game& game);
+        bool isOver(Team* winningTeam = NULL) const;
     };
 
     std::ostream& operator<< (std::ostream& os, const Game& game) {
