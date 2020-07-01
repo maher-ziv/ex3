@@ -1,11 +1,13 @@
 #ifndef HW3_GAME_H
 #define HW3_GAME_H
 
-#include <Auxiliaries.h>
-#include <Character.h>
-#include <Exceptions.h>
+#include "Auxiliaries.h"
+#include "Character.h"
+#include "Exceptions.h"
+#include "Medic.h"
+#include "Sniper.h"
+#include "Soldier.h"
 
-#include <array>
 #include <iostream>
 #include <memory>
 #include <vector>

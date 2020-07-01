@@ -10,7 +10,7 @@ Character::Character (int health, int ammo, int range, int power, Team team)
     if (health <= 0 || power < 0 || ammo < 0) {
         throw IllegalArgument();
 
-    }  // TODO exception for coordinate
+    }  // TODO exception for coordinate 
 }
 
 Character::Condition Character::health_add (int points) {

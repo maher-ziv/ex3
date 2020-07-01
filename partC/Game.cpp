@@ -1,10 +1,6 @@
 #include "Game.h"
 
-#include <array>
 
-#include "Medic.h"
-#include "Sniper.h"
-#include "Soldier.h"
 using namespace mtm;
 using std::array;
 using std::vector;
@@ -39,9 +35,10 @@ Game &Game::operator= (const Game &other) {
     board = tmp.board;  // TODO לבדוק שזה מעתיק כמו שצריך
     height = other.height;
     width = other.width;
+    return *this;
 }
 
-static shared_ptr<Character> makeCharacter (CharacterType type, Team team, units_t health, units_t ammo, units_t range,
+shared_ptr<Character> Game::makeCharacter (CharacterType type, Team team, units_t health, units_t ammo, units_t range,
                                             units_t power) {
 
     if (type == SOLDIER) {
@@ -50,9 +47,10 @@ static shared_ptr<Character> makeCharacter (CharacterType type, Team team, units
     if (type == MEDIC) {
         return shared_ptr<Character> (new Medic (health, ammo, range, power, team));
     }
-    if (type == SNIPER) {
-        return shared_ptr<Character> (new Sniper (health, ammo, range, power, team));
-    }
+    return shared_ptr<Character> (new Sniper (health, ammo, range, power, team));
+    
+
+    
 }
 
 void Game::addCharacter (const GridPoint &coordinates, shared_ptr<Character> character) {
@@ -77,7 +75,7 @@ void Game::move (const GridPoint &src_coordinates, const GridPoint &dst_coordina
     }
     if (board.at (dst_coordinates.row).at (dst_coordinates.col)) {
         throw CellOccupied();  // TODO לבדןק לא null
-    }
+    }                                                                       
     if (board.at (src_coordinates.row).at (src_coordinates.col)->max_steps() <
         GridPoint::distance (src_coordinates, dst_coordinates)) {
         throw MoveTooFar();
@@ -110,7 +108,7 @@ void Game::reload (const GridPoint &coordinates) {
     board.at (coordinates.row).at (coordinates.col)->relode();
 }
 
-bool Game::isOver (Team *winningTeam = NULL) const {
+bool Game::isOver (Team *winningTeam ) const {
     bool cpp = false, python = false;
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
@@ -124,4 +122,17 @@ bool Game::isOver (Team *winningTeam = NULL) const {
     if (!cpp && !python) return false;
     *winningTeam =( winningTeam != nullptr) ? (cpp ? CPP : PYTHON) : *winningTeam;
     return true;
+}
+
+
+
+int main(){
+    
+    Game g1(5,5);
+    g1.addCharacter(GridPoint(1,4), Game::makeCharacter(CharacterType::SNIPER, Team::CPP, 10, 2, 4, 5));
+    g1.addCharacter(GridPoint(2,3), Game::makeCharacter(CharacterType::MEDIC, Team::PYTHON, 10, 2, 4, 5));
+    std::cout<<g1<<std::endl;
+    
+   
+
 }
