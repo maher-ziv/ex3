@@ -23,12 +23,11 @@ namespace mtm {
         using pCharacter = shared_ptr<Character>;
         vector<vector<pCharacter>> board;
         int height, width;
-        char* out ;
         
         public:
         Game() = delete;
         Game (int height, int width);
-        ~Game() { delete[] out ;}
+        ~Game() = default;
         Game (const Game& other);
         Game& operator= (const Game& other);
         void addCharacter (const GridPoint& coordinates, shared_ptr<Character> character);
@@ -41,22 +40,24 @@ namespace mtm {
         bool isOver(Team* winningTeam = NULL) const;
     };
 
-    std::ostream& operator<< (std::ostream& os, const Game& game) {
-        int size = game.height * game.width, index = 0;
-        char* out = new char (size);
+    std::ostream& operator<<(std::ostream& os, const Game& game) {
+        std::string delimiter = std::string(2 * game.width + 1, '*');
+		os << delimiter << std::endl;
         for (vector<shared_ptr<Character>> i : game.board) {
             for (shared_ptr<Character> j : i) {
                 if (j != nullptr) {
-                    out[index++] = j->letter();
+                    os << "|" << (j->letter());
                 }else { 
-                    out[index++] = ' ';
+                    os << "|" << (' ');
                 }
-               
             }
+            os << "|" << std::endl;
         }
-        return printGameBoard (os, out, out + size, game.width);
+        os << delimiter;
+        return os;
     }
 
 }  // namespace mtm
 
 #endif  // HW3_GAME_H
+

@@ -6,7 +6,7 @@ using std::array;
 using std::vector;
 
 Game::Game (int height, int width)
-    : height (height), width (width), board (height, vector<pCharacter> (width)), out (nullptr) {
+    : height (height), width (width), board (height, vector<pCharacter> (width)) {
     if (height <= 0 || width <= 0) {
         throw IllegalArgument();
     }
@@ -15,8 +15,8 @@ Game::Game (int height, int width)
 Game::Game (const Game &other)
     : height (other.height),
       width (other.width),
-      board (other.height, vector<pCharacter> (other.width)),
-      out (nullptr) {
+      board (other.height, vector<pCharacter> (other.width))
+    {
 
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
@@ -126,13 +126,23 @@ bool Game::isOver (Team *winningTeam ) const {
 
 
 
-int main(){
+// int main(){
     
-    Game g1(5,5);
-    g1.addCharacter(GridPoint(1,4), Game::makeCharacter(CharacterType::SNIPER, Team::CPP, 10, 2, 4, 5));
-    g1.addCharacter(GridPoint(2,3), Game::makeCharacter(CharacterType::MEDIC, Team::PYTHON, 10, 2, 4, 5));
-    std::cout<<g1<<std::endl;
+//     Game g1(8,9);
+//     g1.addCharacter(GridPoint(1,4), Game::makeCharacter(CharacterType::SNIPER, Team::CPP, 10, 2, 4, 5));
+//     g1.addCharacter(GridPoint(2,3), Game::makeCharacter(CharacterType::MEDIC, Team::PYTHON, 10, 2, 4, 5));
+//     g1.addCharacter(GridPoint(7,8), Game::makeCharacter(CharacterType::MEDIC, Team::PYTHON, 10, 2, 4, 5));
+    
+    
+//     std::cout<<g1<<std::endl;
+
+//     // Game g1(6,6);
+//     // g1.addCharacter(GridPoint(1,2), Game::makeCharacter(CharacterType::SNIPER, Team::CPP, 10, 2, 4, 5));
+//     // g1.addCharacter(GridPoint(1,0), Game::makeCharacter(CharacterType::MEDIC, Team::PYTHON, 10, 2, 4, 5));
+//     // g1.addCharacter(GridPoint(5,5), Game::makeCharacter(CharacterType::MEDIC, Team::PYTHON, 10, 2, 4, 5));
+//     // std::cout<<g1<<std::endl;
     
    
 
-}
+// }
+
