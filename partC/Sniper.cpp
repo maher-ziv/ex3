@@ -8,20 +8,25 @@ std::shared_ptr<Character> Sniper::clone() const {
     return std::shared_ptr<Character> (new Sniper (*this));
 }
 
+char Sniper::letter() {
+    return team == CPP ? 'N' : 'n';
+}
+
 void Sniper::attack (vector<vector<shared_ptr<Character>>>& board, const GridPoint& src_coordinates,
                      const GridPoint& dst_coordinates) {
 
+  
     if (GridPoint::distance (src_coordinates, dst_coordinates) > range ||
         GridPoint::distance (src_coordinates, dst_coordinates) < ceil (double(range) / 2)) {
         throw OutOfRange();
     }
-    if (!board.at (dst_coordinates.row).at (dst_coordinates.col)) {
-        throw CellEmpty();  // TODO לבדןק לא null
-    }
+
     if (ammo == 0) {
         throw OutOfAmmo();
     }
-    if (board.at(dst_coordinates.row).at(dst_coordinates.col)->team == team) {
+    
+    if (board.at(dst_coordinates.row).at(dst_coordinates.col) == nullptr ||
+    board.at(dst_coordinates.row).at(dst_coordinates.col)->team == team) {
         throw IllegalTarget();
     }
 

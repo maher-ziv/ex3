@@ -8,16 +8,25 @@ std::shared_ptr<Character> Soldier::clone() const {
     return std::shared_ptr<Character> (new Soldier (*this));
 }
 
+char Soldier::letter() {
+    return team == CPP ? 'S' : 's';
+}
+
 void Soldier::attack (std::vector<std::vector<std::shared_ptr<Character>>>& board, const GridPoint& src_coordinates,
                       const GridPoint& dst_coordinates) {
 
-    if ((src_coordinates.row != dst_coordinates.row && src_coordinates.col != dst_coordinates.col) ||
-        GridPoint::distance (src_coordinates, dst_coordinates) > range) {
+    if (GridPoint::distance (src_coordinates, dst_coordinates) > range) {
         throw OutOfRange();
     }
 
     if (ammo == 0) {
         throw OutOfAmmo();
+    }
+
+    if (GridPoint::distance (src_coordinates, dst_coordinates) != 0) {
+        if (src_coordinates.row != dst_coordinates.row && src_coordinates.col != dst_coordinates.col) {
+            throw IllegalTarget();
+        }
     }
 
     for (int i = 0; i < board.size(); ++i) {

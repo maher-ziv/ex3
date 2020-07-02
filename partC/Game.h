@@ -12,6 +12,7 @@
 #include <memory>
 #include <vector>
 #include <string>
+#include<cctype>
 using mtm::Character;
 using mtm::GridPoint;
 using std::array;
@@ -25,7 +26,7 @@ namespace mtm {
         using pCharacter = shared_ptr<Character>;
         vector<vector<pCharacter>> board;
         int height, width;
-        void isIllegalCell (const GridPoint &coordinates);
+        void isIllegalCell (const GridPoint &coordinates) const;
         
         public:
         Game() = delete;
@@ -47,7 +48,7 @@ namespace mtm {
             for (vector<shared_ptr<Character>> i : game.board) {
                 for (shared_ptr<Character> j : i) {
                     if (j != nullptr) {
-                        os << "|" << (j->team==CPP? j->letter() : putchar(tolower(j->letter())));
+                        os << "|" << (j->letter());
                     } else {
                         os << "|" << (' ');
                     }

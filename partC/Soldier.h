@@ -29,7 +29,7 @@ namespace mtm {
 
         void relode() override{ammo+=BULLETS;}
         int max_steps() override{return MAX_STEPS;}
-        char letter() override {return 'S';}
+        char letter() override;
            
     };
     

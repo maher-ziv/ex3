@@ -11,8 +11,8 @@ using mtm::Character;
 using mtm::GridPoint;
 
 
-
 namespace mtm {
+    
     class Medic : public Character {
         private:
         static const int MAX_STEPS = 5;
@@ -27,7 +27,7 @@ namespace mtm {
                              const GridPoint& dst_coordinates) override;
         void relode() override{ammo+=BULLETS;}
         int max_steps() override{return MAX_STEPS;}
-        char letter() override {return 'M';}
+        char letter() override;
     };
 }  // namespace mtm
 

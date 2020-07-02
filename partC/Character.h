@@ -9,31 +9,29 @@
 
 #include "Auxiliaries.h"
 #include "Exceptions.h"
-using mtm::GridPoint;
 
 namespace mtm {
     class Character {
 
-        private:
-        protected:
+       private:
+       protected:
         int range, power, health, ammo;
         enum Condition { DEAD, ALIVE };
 
-        public:
+       public:
         const Team team;
         Character() = delete;
         Character (int health, int ammo, int range, int power, Team team);
-        Character(const Character& character) = default;
+        Character (const Character& character) = default;
 
         virtual ~Character() {}
         virtual std::shared_ptr<Character> clone() const = 0;
-        virtual void attack (std::vector<std::vector<std::shared_ptr<Character>>>& board, const GridPoint& src_coordinates,
-                             const GridPoint& dst_coordinates) = 0;
-        virtual void relode()=0;
+        virtual void attack (std::vector<std::vector<std::shared_ptr<Character>>>& board,
+                             const GridPoint& src_coordinates, const GridPoint& dst_coordinates) = 0;
+        virtual void relode() = 0;
         virtual int max_steps() = 0;
-        virtual Condition health_add (int points); 
-        virtual char letter() = 0; 
-
+        virtual Condition health_add (int points);
+        virtual char letter() = 0;
     };
 
 }  // namespace mtm

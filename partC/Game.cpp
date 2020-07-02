@@ -4,16 +4,17 @@ using namespace mtm;
 using std::array;
 using std::vector;
 
-inline void Game::isIllegalCell (const GridPoint &coordinates) {
+void Game::isIllegalCell (const GridPoint &coordinates) const{
     if (coordinates.row < 0 || coordinates.row >= height || coordinates.col < 0 || coordinates.col >= width) {
         throw IllegalCell();
     }
 }
 
-Game::Game (int height, int width) : height (height), width (width), board (height, vector<pCharacter> (width)) {
+Game::Game (int height, int width) : height (height), width (width), board ((std::abs(height)), vector<pCharacter> (std::abs(width))){
     if (height <= 0 || width <= 0) {
         throw IllegalArgument();
     }
+  
 }
 
 Game::Game (const Game &other)
@@ -37,15 +38,18 @@ Game &Game::operator= (const Game &other) {
             }
         }
     }
-    board = other.board;  // TODO לבדוק שזה מעתיק
-    height = other.height;
-    width = other.width;
+    board.empty();
+    board = tmp.board;  // TODO לבדוק שזה מעתיק
+    height = tmp.height;
+    width = tmp.width;
     return *this;
 }
 
 shared_ptr<Character> Game::makeCharacter (CharacterType type, Team team, units_t health, units_t ammo, units_t range,
                                            units_t power) {
-
+    if(health <= 0 || ammo < 0 || range < 0 || power < 0) {
+        throw IllegalArgument();
+    } 
     if (type == SOLDIER) {
         return shared_ptr<Character> (new Soldier (health, ammo, range, power, team));
     }
@@ -66,19 +70,28 @@ void Game::addCharacter (const GridPoint &coordinates, shared_ptr<Character> cha
 }
 
 void Game::move (const GridPoint &src_coordinates, const GridPoint &dst_coordinates) {
-    isIllegalCell(src_coordinates);
-    isIllegalCell(dst_coordinates);
+
+    if (src_coordinates.row < 0 || src_coordinates.row >= height || src_coordinates.col < 0 ||
+        src_coordinates.col >= width || dst_coordinates.row < 0 || dst_coordinates.row >= height ||
+        dst_coordinates.col < 0 || dst_coordinates.col >= width) {
+        throw IllegalCell();
+    }
 
     if (!board.at (src_coordinates.row).at (src_coordinates.col)) {
         throw CellEmpty();  // TODO לבדןק לא null
     }
-    if (board.at (dst_coordinates.row).at (dst_coordinates.col)) {
-        throw CellOccupied();  // TODO לבדןק לא null
+    if (src_coordinates == dst_coordinates) {
+        return;
     }
+    
     if (board.at (src_coordinates.row).at (src_coordinates.col)->max_steps() <
         GridPoint::distance (src_coordinates, dst_coordinates)) {
         throw MoveTooFar();
     }
+    if (board.at (dst_coordinates.row).at (dst_coordinates.col)) {
+        throw CellOccupied();  // TODO לבדןק לא null
+    }
+
     board.at (dst_coordinates.row).at (dst_coordinates.col) = board.at (src_coordinates.row).at (src_coordinates.col);
     board.at (src_coordinates.row)
         .at (src_coordinates.col)
@@ -86,8 +99,12 @@ void Game::move (const GridPoint &src_coordinates, const GridPoint &dst_coordina
 }
 
 void Game::attack (const GridPoint &src_coordinates, const GridPoint &dst_coordinates) {
-    isIllegalCell(src_coordinates);
-    isIllegalCell(dst_coordinates);
+    if (src_coordinates.row < 0 || src_coordinates.row >= height || src_coordinates.col < 0 ||
+        src_coordinates.col >= width || dst_coordinates.row < 0 || dst_coordinates.row >= height ||
+        dst_coordinates.col < 0 || dst_coordinates.col >= width) {
+        throw IllegalCell();
+    }
+
     if (!board.at (src_coordinates.row).at (src_coordinates.col)) {
         throw CellEmpty();  // TODO לבדןק לא null
     }
@@ -95,7 +112,10 @@ void Game::attack (const GridPoint &src_coordinates, const GridPoint &dst_coordi
 }
 
 void Game::reload (const GridPoint &coordinates) {
-    isIllegalCell(coordinates);
+    if (coordinates.row < 0 || coordinates.row >= height || coordinates.col < 0 || coordinates.col >= width) {
+        throw IllegalCell();
+    }
+
     if (!board.at (coordinates.row).at (coordinates.col)) {
         throw CellEmpty();  // TODO לבדןק שישי null
     }
@@ -115,23 +135,7 @@ bool Game::isOver (Team *winningTeam) const {
     }
     if (!cpp && !python)
         return false;
-    *winningTeam = (winningTeam != nullptr) ? (cpp ? CPP : PYTHON) : *winningTeam;
+    if(winningTeam != nullptr){*winningTeam = cpp ? CPP : PYTHON;}
     return true;
 }
 
-// int main(){
-
-//     Game g1(8,9);
-//     g1.addCharacter(GridPoint(1,4), Game::makeCharacter(CharacterType::SNIPER, Team::CPP, 10, 2, 4, 5));
-//     g1.addCharacter(GridPoint(2,3), Game::makeCharacter(CharacterType::MEDIC, Team::PYTHON, 10, 2, 4, 5));
-//     g1.addCharacter(GridPoint(7,8), Game::makeCharacter(CharacterType::MEDIC, Team::PYTHON, 10, 2, 4, 5));
-
-//     std::cout<<g1<<std::endl;
-
-//     // Game g1(6,6);
-//     // g1.addCharacter(GridPoint(1,2), Game::makeCharacter(CharacterType::SNIPER, Team::CPP, 10, 2, 4, 5));
-//     // g1.addCharacter(GridPoint(1,0), Game::makeCharacter(CharacterType::MEDIC, Team::PYTHON, 10, 2, 4, 5));
-//     // g1.addCharacter(GridPoint(5,5), Game::makeCharacter(CharacterType::MEDIC, Team::PYTHON, 10, 2, 4, 5));
-//     // std::cout<<g1<<std::endl;
-
-// }
