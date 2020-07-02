@@ -1,11 +1,8 @@
 #ifndef HW3_EXCEPTION_H
 #define HW3_EXCEPTION_H
 
-#include <Auxiliaries.h>
-#include <Character.h>
-
 #include <iostream>
-#include <string>
+
 namespace mtm {
 
     class Exception : public std::exception {};
@@ -63,6 +60,5 @@ namespace mtm {
         }
     };
 }  // namespace mtm
-  
 
 #endif  // HW3_EXCEPTION_H

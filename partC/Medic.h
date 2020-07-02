@@ -1,14 +1,8 @@
 #ifndef HW3_MEDIC_H
 #define HW3_MEDIC_H
 
-#include <Auxiliaries.h>
-#include <Character.h>
+#include "Character.h"
 
-#include <iostream>
-#include <memory>
-
-using mtm::Character;
-using mtm::GridPoint;
 
 
 namespace mtm {

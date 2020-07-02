@@ -1,16 +1,7 @@
 #ifndef HW3_SNIPER_H
 #define HW3_SNIPER_H
 
-#include <Auxiliaries.h>
-#include <Character.h>
-
-#include <iostream>
-#include <memory>
-
-using mtm::Character;
-using mtm::GridPoint;
-
-
+#include "Character.h"
 
 
 namespace mtm {
@@ -18,7 +9,8 @@ namespace mtm {
         private:
         static const int MAX_STEPS = 4;
         static const int BULLETS = 2;
-        int attack_counter;
+        //counter to double the damage of his third attack
+        int attack_counter; 
         public:
         Sniper() = delete;
         Sniper (int health, int ammo, int range, int power, Team team)

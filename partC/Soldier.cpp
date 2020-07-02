@@ -33,9 +33,10 @@ void Soldier::attack (std::vector<std::vector<std::shared_ptr<Character>>>& boar
         for (int j = 0; j < board.at (i).size(); ++j) {
             if (board.at (i).at (j) != nullptr) {
                 GridPoint square (i, j);
-                if ((GridPoint::distance (square, dst_coordinates) <= ceil (double(range)/ 3)) &&
+                if ((GridPoint::distance (square, dst_coordinates) <= ceil (double (range) / 3)) &&
                     board.at (i).at (j)->team != team) {
-                    int damage = (i == dst_coordinates.row && j == dst_coordinates.col) ? power : ceil (double(power)/ 2);
+                    int damage =
+                        (i == dst_coordinates.row && j == dst_coordinates.col) ? power : ceil (double (power) / 2);
                     if (board.at (i).at (j)->health_add (-damage) == DEAD) {
                         board.at (i).at (j).reset();
                     }

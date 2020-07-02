@@ -15,18 +15,17 @@ char Sniper::letter() {
 void Sniper::attack (vector<vector<shared_ptr<Character>>>& board, const GridPoint& src_coordinates,
                      const GridPoint& dst_coordinates) {
 
-  
     if (GridPoint::distance (src_coordinates, dst_coordinates) > range ||
-        GridPoint::distance (src_coordinates, dst_coordinates) < ceil (double(range) / 2)) {
+        GridPoint::distance (src_coordinates, dst_coordinates) < ceil (double (range) / 2)) {
         throw OutOfRange();
     }
 
     if (ammo == 0) {
         throw OutOfAmmo();
     }
-    
-    if (board.at(dst_coordinates.row).at(dst_coordinates.col) == nullptr ||
-    board.at(dst_coordinates.row).at(dst_coordinates.col)->team == team) {
+
+    if (board.at (dst_coordinates.row).at (dst_coordinates.col) == nullptr ||
+        board.at (dst_coordinates.row).at (dst_coordinates.col)->team == team) {
         throw IllegalTarget();
     }
 
@@ -35,5 +34,5 @@ void Sniper::attack (vector<vector<shared_ptr<Character>>>& board, const GridPoi
         board.at (dst_coordinates.row).at (dst_coordinates.col).reset();
     }
     ammo--;
-    ++attack_counter %= 3;  // TODO test
+    ++attack_counter %= 3; 
 }
