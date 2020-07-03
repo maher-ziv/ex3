@@ -1,3 +1,0 @@
-"C:\Program Files\JetBrains\CLion 2020.1.2\bin\cmake\win\bin\cmake.exe" -E remove -f CMakeFiles\dry1.dir/objects.a
-C:\TDM-GCC-64\bin\ar.exe cr CMakeFiles\dry1.dir/objects.a @CMakeFiles\dry1.dir\objects1.rsp
-C:\TDM-GCC-64\bin\g++.exe -g   -Wl,--whole-archive CMakeFiles\dry1.dir/objects.a -Wl,--no-whole-archive  -o dry1.exe -Wl,--out-implib,libdry1.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\dry1.dir\linklibs.rsp

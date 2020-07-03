@@ -57,7 +57,7 @@ namespace mtm {
         friend std::ostream& operator<<<T> (std::ostream& os, const Matrix& m);
 
         typedef T_iterator<T> iterator;
-        iterator begin();  // TODO check if const needed
+        iterator begin(); 
         iterator end();
 
         typedef T_iterator<const T> const_iterator;
@@ -181,7 +181,7 @@ namespace mtm {
         matrix = allocate_space (dimension.getRow(), dimension.getCol());
         typename Matrix<T>::const_iterator it2 = m.begin();
         for (typename Matrix<T>::iterator it = begin(); it != end(); ++it, ++it2) {
-            *it = *it2;  // TODO check if need to catch another throw
+            *it = *it2;  
         }
     }
 
@@ -209,7 +209,7 @@ namespace mtm {
     template<typename T>
     Matrix<T>& Matrix<T>::operator= (const Matrix<T>& m) {
         T** tmp_data = allocate_and_copy (m.matrix, m.height(), m.width());
-        for (int i = 0; i < height(); i++) {  // TODO
+        for (int i = 0; i < height(); i++) {  
             delete[] matrix[i];
         }
         delete[] matrix;
@@ -381,9 +381,9 @@ namespace mtm {
      *
      * This Method fills the Matrix with @T operator+=
      */
-    template<typename T>  // TODO לבדןק אפ אפשר לקצר
+    template<typename T>  
     Matrix<T> operator+ (const Matrix<T>& m, const T& val) {
-        Matrix<T> tmp (m);  // TODO לבדוק אם זה בסדר והוא באמת מחזיר עותק
+        Matrix<T> tmp (m); 
         for (typename Matrix<T>::iterator it = tmp.begin(); it != tmp.end(); ++it) {
             *it += val;
         }

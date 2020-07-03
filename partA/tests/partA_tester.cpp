@@ -6,8 +6,8 @@
 #include <iterator>
 #include <string>
 
-#include "IntMatrix.h"
-#include "Auxiliaries.h"
+#include "../IntMatrix.h"
+#include "../Auxiliaries.h"
 
 using namespace mtm;
 using std::cout;

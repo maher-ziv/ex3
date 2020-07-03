@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include "Matrix.h"
+#include "../Matrix.h"
 
 class Square { 
     public: 
